@@ -53,7 +53,9 @@ public class MarineMod {
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
 		proxy.registerRenderers();
-		GameRegistry.registerWorldGenerator(new MainGenerator(), 1000);		
+		GameRegistry.registerWorldGenerator(new MainGenerator(), 1000);	
+		
+		// Block and Item Registration
 	}
 
 	@EventHandler
