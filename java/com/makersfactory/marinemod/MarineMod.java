@@ -37,6 +37,7 @@ public class MarineMod {
 	public static CommonProxy proxy;
 	
 	// NEW FIELDS GO HERE
+	public static Item myItem = new Item();
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -54,6 +55,11 @@ public class MarineMod {
 	public void load(FMLInitializationEvent event) {
 		proxy.registerRenderers();
 		GameRegistry.registerWorldGenerator(new MainGenerator(), 1000);	
+		
+		myItem.setCreativeTab(CreativeTabs.tabMisc);
+		myItem.setTextureName("myassets:textures/items/myItem.png");
+		myItem.setUnlocalizedName("myItem");
+		GameRegistry.registerItem(myItem, "myItem");
 	}
 
 	@EventHandler

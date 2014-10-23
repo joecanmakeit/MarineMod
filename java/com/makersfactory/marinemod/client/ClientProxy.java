@@ -2,8 +2,11 @@ package com.makersfactory.marinemod.client;
 
 import com.makersfactory.marinemod.CommonProxy;
 import com.makersfactory.marinemod.MarineMod;
+import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
+import com.makersfactory.marinemod.model.ModelGull;
 import com.makersfactory.marinemod.model.ModelJellyfish;
+import com.makersfactory.marinemod.renderer.RenderGull;
 import com.makersfactory.marinemod.renderer.RenderJellyfish;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -19,5 +22,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenderers() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityJellyfish.class, new RenderJellyfish(new ModelJellyfish(1), new ModelJellyfish(0), 1.0F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityGull.class, new RenderGull(new ModelGull(), 1.0F));
 	}
 }

@@ -1,5 +1,6 @@
 package com.makersfactory.marinemod;
 
+import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
 
 import net.minecraft.entity.EntityList;
@@ -9,10 +10,15 @@ public class MyMobSetup {
 	
 	public static void mainRegistry(MarineMod mod) {
 		registerJellyfish(mod);
+		registerGull(mod);
 	}
 	
 	public static void registerJellyfish(MarineMod mod) {
 		createEntity(mod, EntityJellyfish.class, "Jellyfish", 0xE7ABFF, 0x7700A6);
+	}
+	
+	public static void registerGull(MarineMod mod) {
+		createEntity(mod, EntityGull.class, "Gull", 0xE7ABFF, 0x7700A6);
 	}
 	
 	public static void createEntity(MarineMod mod, Class entityClass, String entityName, int solidColor, int spotColor) {
