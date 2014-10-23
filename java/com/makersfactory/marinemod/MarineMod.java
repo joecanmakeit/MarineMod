@@ -29,7 +29,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="NAME_GOES_HERE_ID", name="NAME_GOES_HERE", version="0.1.0")
+@Mod(modid="marinemod", name="Monterey Bay Marine Mod", version="0.1.0")
 public class MarineMod {
 	@Instance(value = "1")
 	public static MarineMod instance;

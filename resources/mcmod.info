@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
-  "version": "${version}",
+  "modid": "marinemod",
+  "name": "Monterey Bay Marine Mod",
+  "description": "Adds marine creatures from Monterey Bay!",
+  "version": "0.1.0",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": [""],
+  "credits": "",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
