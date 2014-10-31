@@ -5,12 +5,15 @@ import com.makersfactory.marinemod.MarineMod;
 import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
 import com.makersfactory.marinemod.entity.EntityStarfish;
+import com.makersfactory.marinemod.entity.EntityWhale;
 import com.makersfactory.marinemod.model.ModelGull;
 import com.makersfactory.marinemod.model.ModelJellyfish;
 import com.makersfactory.marinemod.model.ModelStarfish;
+import com.makersfactory.marinemod.model.ModelWhale;
 import com.makersfactory.marinemod.renderer.RenderGull;
 import com.makersfactory.marinemod.renderer.RenderJellyfish;
 import com.makersfactory.marinemod.renderer.RenderStarfish;
+import com.makersfactory.marinemod.renderer.RenderWhale;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.model.ModelPig;
@@ -27,5 +30,6 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityJellyfish.class, new RenderJellyfish(new ModelJellyfish(1), new ModelJellyfish(0), 1.0F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityGull.class, new RenderGull(new ModelGull(), 1.0F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityStarfish.class, new RenderStarfish(new ModelStarfish(), 1.0F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityWhale.class, new RenderWhale(new ModelWhale(), new ModelWhale(), 1.0F));
 	}
 }

@@ -3,6 +3,7 @@ package com.makersfactory.marinemod;
 import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
 import com.makersfactory.marinemod.entity.EntityStarfish;
+import com.makersfactory.marinemod.entity.EntityWhale;
 
 import net.minecraft.entity.EntityList;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -13,6 +14,7 @@ public class MyMobSetup {
 		registerJellyfish(mod);
 		registerGull(mod);
 		registerStarfish(mod);
+		registerWhale(mod);
 	}
 	
 	public static void registerJellyfish(MarineMod mod) {
@@ -25,6 +27,10 @@ public class MyMobSetup {
 	
 	public static void registerStarfish(MarineMod mod) {
 		createEntity(mod, EntityStarfish.class, "Starfish", 0xE7ABFF, 0x7700A6);
+	}
+	
+	public static void registerWhale(MarineMod mod) {
+		createEntity(mod, EntityWhale.class, "Whale", 0xE7ABFF, 0x7700A6);
 	}
 	
 	public static void createEntity(MarineMod mod, Class entityClass, String entityName, int solidColor, int spotColor) {
