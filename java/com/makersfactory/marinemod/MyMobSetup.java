@@ -6,6 +6,8 @@ import com.makersfactory.marinemod.entity.EntityStarfish;
 import com.makersfactory.marinemod.entity.EntityWhale;
 
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.world.biome.BiomeGenBase;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
 public class MyMobSetup {
@@ -39,6 +41,11 @@ public class MyMobSetup {
 		EntityRegistry.registerGlobalEntityID(entityClass, entityName, randomID);
 		EntityRegistry.registerModEntity(entityClass, entityName, randomID, mod, 80, 1, true);
 		createEgg(randomID, solidColor, spotColor);
+		
+		if (entityName == "Starfish") {
+			EntityRegistry.addSpawn(entityClass, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.beach);
+			EntityRegistry.addSpawn(entityClass, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.ocean);
+		}
 	}
 
 	private static void createEgg(int randomID, int solidColor, int spotColor) {
