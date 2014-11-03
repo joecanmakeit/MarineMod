@@ -2,6 +2,7 @@ package com.makersfactory.marinemod;
 
 import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
+import com.makersfactory.marinemod.entity.EntitySeagull;
 import com.makersfactory.marinemod.entity.EntityStarfish;
 import com.makersfactory.marinemod.entity.EntityWhale;
 
@@ -17,6 +18,7 @@ public class MyMobSetup {
 		registerGull(mod);
 		registerStarfish(mod);
 		registerWhale(mod);
+		registerSeagull(mod);
 	}
 	
 	public static void registerJellyfish(MarineMod mod) {
@@ -35,6 +37,10 @@ public class MyMobSetup {
 		createEntity(mod, EntityWhale.class, "Whale", 0xE7ABFF, 0x7700A6);
 	}
 	
+	public static void registerSeagull(MarineMod mod) {
+		createEntity(mod, EntitySeagull.class, "Seagull", 0xE7E6DD, 0xF4B400);
+	}
+	
 	public static void createEntity(MarineMod mod, Class entityClass, String entityName, int solidColor, int spotColor) {
 		int randomID = EntityRegistry.findGlobalUniqueEntityId();
 		
@@ -45,6 +51,11 @@ public class MyMobSetup {
 		if (entityName == "Starfish") {
 			EntityRegistry.addSpawn(entityClass, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.beach);
 			EntityRegistry.addSpawn(entityClass, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.ocean);
+		}
+		
+		if (entityName == "Seagull") {
+			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
+			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
 		}
 	}
 
