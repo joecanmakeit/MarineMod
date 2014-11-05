@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.item.Item;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 /*
@@ -163,6 +164,8 @@ public class EntityElephantSeal extends EntityWaterMob {
 			}
 		}
 
+		/*
+		
 		if (this.isInWater()) {
 			float f;
 
@@ -208,6 +211,7 @@ public class EntityElephantSeal extends EntityWaterMob {
 
 			this.squidPitch = (float) ((double) this.squidPitch + (double) (-90.0F - this.squidPitch) * 0.02D);
 		}
+		*/
 	}
 
 	/**
@@ -278,6 +282,7 @@ public class EntityElephantSeal extends EntityWaterMob {
 		isSwimming = swim_val;
 	}
 }
+
 ///*
 //package net.minecraft.entity.passive;
 //
@@ -1056,4 +1061,3 @@ public class EntityElephantSeal extends EntityWaterMob {
 //        blacksmithSellingList.put(Items.arrow, new Tuple(Integer.valueOf(-12), Integer.valueOf(-8)));
 //    }
 //}
-*/
