@@ -21,18 +21,31 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeModContainer;
 
-public class EntityWhale extends EntitySquid {
+public class EntityWhale extends EntityAnimal{
 	
 	Random random = new Random();
 	
 	public EntityWhale(World par1World) {
 		super(par1World);
         this.isImmuneToFire = true;
+
 	}
     
     public void onUpdate()
     {
         super.onUpdate();
+    }
+    
+    public boolean isAIEnabled()
+    {
+        return true;
+    }
+    
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(3.2D);
     }
 	
 }
