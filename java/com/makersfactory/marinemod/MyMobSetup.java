@@ -1,5 +1,6 @@
 package com.makersfactory.marinemod;
 
+import com.makersfactory.marinemod.entity.EntityElephantSeal;
 import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
 import com.makersfactory.marinemod.entity.EntitySeagull;
@@ -18,6 +19,7 @@ public class MyMobSetup {
 		registerGull(mod);
 		registerStarfish(mod);
 		registerWhale(mod);
+		registerEntityElephantSeal(mod);
 		registerSeagull(mod);
 	}
 	
@@ -35,6 +37,10 @@ public class MyMobSetup {
 	
 	public static void registerWhale(MarineMod mod) {
 		createEntity(mod, EntityWhale.class, "Whale", 0xE7ABFF, 0x7700A6);
+	}
+	
+	public static void registerEntityElephantSeal(MarineMod mod) {
+		createEntity(mod, EntityElephantSeal.class, "EntityElephantSeal", 0xE7ABFF, 0x7700A6);
 	}
 	
 	public static void registerSeagull(MarineMod mod) {
@@ -61,6 +67,10 @@ public class MyMobSetup {
 		if (entityName == "Whale") {
 			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
 			EntityRegistry.addSpawn(entityClass, 6, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
+		}
+		
+		if (entityName == "EntityElephantSeal") {
+			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
 		}
 	}
 
