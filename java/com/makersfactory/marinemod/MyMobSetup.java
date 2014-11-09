@@ -57,6 +57,11 @@ public class MyMobSetup {
 			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
 			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
 		}
+		
+		if (entityName == "Whale") {
+			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
+			EntityRegistry.addSpawn(entityClass, 6, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
+		}
 	}
 
 	private static void createEgg(int randomID, int solidColor, int spotColor) {

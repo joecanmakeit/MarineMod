@@ -65,19 +65,19 @@ public class EntityWhale extends EntityWaterMob {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(12.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(5.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(100.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(1.0D);
     }
 
-	/*@Override
-	public EntityAgeable createChild(EntityAgeable p_90011_1_) {
+	@Override
+	/*public EntityAgeable createChild(EntityAgeable p_90011_1_) {
 		// TODO Auto-generated method stub
 		return null;
 	}    protected String getLivingSound()
     {
         return "mob.pig.say";
-    }
-*/
+    }*/
+
      // Returns the sound this mob makes when it is hurt.
     protected String getHurtSound()
     {
