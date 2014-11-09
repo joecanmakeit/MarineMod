@@ -12,11 +12,6 @@ import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySquid;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -46,14 +41,31 @@ public class EntityWhale extends EntityAnimal {
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(3.2D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(12.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.01D);
     }
 
 	@Override
 	public EntityAgeable createChild(EntityAgeable p_90011_1_) {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}    protected String getLivingSound()
+    {
+        return "mob.pig.say";
+    }
+
+     // Returns the sound this mob makes when it is hurt.
+    protected String getHurtSound()
+    {
+        return "mob.pig.say";
+    }
+
+     //Returns the sound this mob makes on death.
+    protected String getDeathSound()
+    {
+        return "mob.pig.death";
+    }
+	
+	
 	
 }
