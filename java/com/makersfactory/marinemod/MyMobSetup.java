@@ -71,16 +71,8 @@ public class MyMobSetup {
 		
 		if (entityName == "EntityElephantSeal") {
 			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
-		}<<<<<<< .mine		
-		if (entityName == "EntityElephantSeal") {
-			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
 		}
-=======		
-		if (entityName == "Whale") {
-			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
-			EntityRegistry.addSpawn(entityClass, 6, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
-		}
->>>>>>> .theirs	}
+	}
 
 	private static void createEgg(int randomID, int solidColor, int spotColor) {
 		EntityList.entityEggs.put(Integer.valueOf(randomID), new EntityList.EntityEggInfo(randomID, solidColor, spotColor));
