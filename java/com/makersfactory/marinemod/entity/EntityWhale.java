@@ -40,7 +40,6 @@ public class EntityWhale extends EntityWaterMob {
 	public EntityWhale(World par1World) {
 		super(par1World);
 		this.isImmuneToFire = true;
-		
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIPanic(this, 1.4D));
 		//this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
