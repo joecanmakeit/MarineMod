@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderWhale extends RenderLiving {
 
-    private static final ResourceLocation whaleTextures = new ResourceLocation("myassets:textures/entity/Whaletest.png");
+    private static final ResourceLocation whaleTextures = new ResourceLocation("myassets:textures/entity/Whale.png");
     private ModelBase scaleAmount;
     //private static final String __OBFID = "CL_00001024";
 
@@ -52,7 +52,7 @@ public class RenderWhale extends RenderLiving {
      */
     protected ResourceLocation getEntityTexture(EntityWhale par1EntitySlime)
     {
-        return WhaleTextures;
+        return whaleTextures;
     }
 
     /**
