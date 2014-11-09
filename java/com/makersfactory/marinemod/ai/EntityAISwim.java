@@ -4,7 +4,10 @@ import java.util.Date;
 
 import com.makersfactory.marinemod.entity.EntityElephantSeal;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.biome.BiomeGenBase;
 
 /** based off of the ai tutorial Desmond found.
  * http://jabelarminecraft.blogspot.com/p/minecraft-forge-1721710-custom-entity-ai.html
@@ -14,16 +17,13 @@ import net.minecraft.entity.ai.EntityAIBase;
  */
 public class EntityAISwim extends EntityAIBase {
 	private final EntityElephantSeal theEntity;
-	private final double startX;
-	private final double startY;
-	private final double startZ;
-	private final long startTime = (new Date()).getTime();
+	/*private double startX;
+	private double startY;
+	private double startZ;
+	private long startTime; */
 	
 	public EntityAISwim(EntityElephantSeal entity) {
 		theEntity = entity;
-		startX = theEntity.posX;
-		startY = theEntity.posY;
-		startZ = theEntity.posZ;
 		
 		setMutexBits(5); // 1 because moving towards a target spot? 4 because of swimming.
 
@@ -45,31 +45,27 @@ public class EntityAISwim extends EntityAIBase {
 	public void startExecuting() {
 		// DEBUG
 		System.out.println("EntityAISwim startExecute()");
+		
+		/*startTime = (new Date()).getTime();
+		startX = theEntity.posX;
+		startY = theEntity.posY;
+		startZ = theEntity.posZ;*/
+		int[] tmp = this.theEntity.posToBlockPos();
+		double tagetX = Math.random() * 40.0; // TODO is 40.0 good?
+		double tagetY = Math.random() * 40.0; // TODO is 40.0 good?
+		double tagetZ = Math.random() * 40.0; // TODO is 40.0 good?
+		if (this.theEntity. worldObj.getBiomeGenForCoords(tmp[0],tmp[1]) != BiomeGenBase.beach) {
+			// if you are out of the biome. move towards home (move 20% the distance from current position to spawn position).
+			tagetX = theEntity.spawnX + ((theEntity.posX - theEntity.spawnX) * .2);
+			tagetY = theEntity.spawnY + ((theEntity.posY - theEntity.spawnY) * .2);
+			tagetZ = theEntity.spawnZ + ((theEntity.posZ - theEntity.spawnZ) * .2);
+		}
+		this.theEntity.getNavigator().tryMoveToXYZ(tagetX, tagetY, tagetZ, theEntity.swimSpeed);
 	}
 
-	/** stop when have swam for about 200 or when have swam for 2 minutes
-	 * TODO is 200 a good threshold?  **/
 	@Override
 	public boolean continueExecuting() {
-		boolean continueExecuting = true;
-		
-		// note distance just checking farthest point (another reason for using time)
-		double x_diff = theEntity.posX - this.startX;
-		double y_diff = theEntity.posY - this.startY;
-		double z_diff = theEntity.posZ - this.startZ;
-		double distanceTraveled = Math.sqrt(Math.pow(x_diff,2) + Math.pow(y_diff,2) + Math.pow(z_diff,2));
-		if (distanceTraveled > 200) {
-			continueExecuting = false;
-		}
-			
-		if ((new Date()).getTime() - startTime > 120000) {
-			continueExecuting = false;
-		}
-		
-		if (!continueExecuting) {
-			theEntity.setSwimming(false);
-			// TODO set states approperiately
-		}
+		boolean continueExecuting = !this.theEntity.getNavigator().noPath();
 		// DEBUG
 		System.out.println("EntityAIHeadToBeach continueExecuting ="
 				+ continueExecuting);
