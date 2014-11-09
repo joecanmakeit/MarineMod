@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderElephantSeal extends RenderLiving {
 
-    private static final ResourceLocation elephantSealTextures = new ResourceLocation("myassets:textures/entity/EntityElephantSeal.png");
+    private static final ResourceLocation elephantSealTextures = new ResourceLocation("myassets:textures/entity/ElephantSealTexture.png");
     private ModelBase scaleAmount;
     //private static final String __OBFID = "CL_00001024";
 
