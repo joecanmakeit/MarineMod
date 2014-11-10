@@ -1,9 +1,5 @@
 entity.Jellyfish.name=Jellyfish
 entity.Gull.name=Seagull
 entity.Whale.name=Whale
-<<<<<<< HEAD
 entity.Starfish.name=Starfish
-
-=======
 entity.ElephantSeal.name=ElephantSeal
->>>>>>> FETCH_HEAD
