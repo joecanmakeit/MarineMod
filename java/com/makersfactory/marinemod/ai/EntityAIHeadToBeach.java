@@ -6,6 +6,9 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeDictionary; //Alternatively: import net.minecraftforge.common.*;
+import static net.minecraftforge.common.BiomeDictionary.Type;
 
 /** based off of the ai tutorial Desmond found.
  * http://jabelarminecraft.blogspot.com/p/minecraft-forge-1721710-custom-entity-ai.html
@@ -18,6 +21,7 @@ public class EntityAIHeadToBeach extends EntityAIBase {
 	
 	public EntityAIHeadToBeach(EntityElephantSeal entity) {
 		theEntity = entity;
+		
 		setMutexBits(5); // 1 because moving towards a target. 4 because swimming.
 
 		// DEBUG
@@ -37,9 +41,11 @@ public class EntityAIHeadToBeach extends EntityAIBase {
 	public void startExecuting() {
 		// DEBUG
 		System.out.println("EntityAIHeadToBeach startExecute()");
-		// TODO Find beach
-		// find beach (Vec3 vec3 = RandomPositionGenerator.findRandomTarget(this.entity, 10, 7);)
-		// this.entity.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
+		// Find path to the spawn beach
+		this.theEntity.getNavigator().tryMoveToXYZ(theEntity.spawnX, theEntity.spawnY, theEntity.spawnZ, theEntity.swimSpeed);
+		//BiomeGenBase.getBiomeGenArray();
+		//BiomeGenBase[] biomes = BiomeDictionary.getBiomesForType(Type.BEACH);	
+		//this.entityObj.worldObj.villageCollectionObj.findNearestVillage(i, j, k, 14);
 	}
 
 	@Override
