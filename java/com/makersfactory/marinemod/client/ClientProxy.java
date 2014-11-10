@@ -2,16 +2,19 @@ package com.makersfactory.marinemod.client;
 
 import com.makersfactory.marinemod.CommonProxy;
 import com.makersfactory.marinemod.MarineMod;
+import com.makersfactory.marinemod.entity.EntityElephantSeal;
 import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
 import com.makersfactory.marinemod.entity.EntitySeagull;
 import com.makersfactory.marinemod.entity.EntityStarfish;
 import com.makersfactory.marinemod.entity.EntityWhale;
+import com.makersfactory.marinemod.model.ModelElephantSeal;
 import com.makersfactory.marinemod.model.ModelGull;
 import com.makersfactory.marinemod.model.ModelJellyfish;
 import com.makersfactory.marinemod.model.ModelStarfish;
 import com.makersfactory.marinemod.model.ModelWhale;
 import com.makersfactory.marinemod.model.ModelSeagull;
+import com.makersfactory.marinemod.renderer.RenderElephantSeal;
 import com.makersfactory.marinemod.renderer.RenderGull;
 import com.makersfactory.marinemod.renderer.RenderJellyfish;
 import com.makersfactory.marinemod.renderer.RenderStarfish;
@@ -35,5 +38,6 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityStarfish.class, new RenderStarfish(new ModelStarfish(), 1.0F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityWhale.class, new RenderWhale(new ModelWhale(), new ModelWhale(), 1.0F));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySeagull.class, new RenderSeagull(new ModelSeagull(1), new ModelSeagull(0), 1.0F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityElephantSeal.class, new RenderElephantSeal(new ModelElephantSeal(), new ModelElephantSeal(), 1.0F));
 	}
 }
