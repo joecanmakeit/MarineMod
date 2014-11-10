@@ -32,15 +32,15 @@ public class EntityStarfish extends EntityAnimal
         super(p_i1689_1_);
         this.setSize(0.9F, 0.9F);
         this.getNavigator().setAvoidsWater(false);
-        this.tasks.addTask(8, new EntityAILookIdle(this));
-        this.tasks.addTask(6, new EntityAIWander(this, 1.0D));
-        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(0, new EntityAILookIdle(this));
+        this.tasks.addTask(3, new EntityAIWander(this, 0.1D));
+        //this.tasks.addTask(6, new EntityAISwimming(this));
         //this.tasks.addTask(1, new EntityAIPanic(this, 1.25D));
         //this.tasks.addTask(2, this.aiControlledByPlayer = new EntityAIControlledByPlayer(this, 0.3F));
         //this.tasks.addTask(3, new EntityAIMate(this, 1.0D));
         //this.tasks.addTask(4, new EntityAITempt(this, 1.2D, Items.carrot_on_a_stick, false));
         //this.tasks.addTask(4, new EntityAITempt(this, 1.2D, Items.carrot, false));
-        //this.tasks.addTask(5, new EntityAIFollowParent(this, 1.1D));
+        this.tasks.addTask(2, new EntityAIFollowParent(this, 1.1D));
         //this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
 
@@ -57,6 +57,11 @@ public class EntityStarfish extends EntityAnimal
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(5.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.1D);
+    }
+    
+    public boolean canBreatheUnderwater()
+    {
+        return true;
     }
 
     protected void updateAITasks()
@@ -113,7 +118,7 @@ public class EntityStarfish extends EntityAnimal
     }
 
     /**
-     * Create new entity when bred, if entity is in water. 
+     * Create new entity when bred. 
      */
     public EntityStarfish createChild(EntityAgeable p_90011_1_) {
         return new EntityStarfish(this.worldObj);
@@ -127,6 +132,11 @@ public class EntityStarfish extends EntityAnimal
     {
         return this.worldObj.handleMaterialAcceleration(this.boundingBox.expand(0.0D, -0.6000000238418579D, 0.0D), Material.water, this);
     }
+    
+    public void onLivingUpdate() {
+    	super.onLivingUpdate();
+    	
+    }
 
     /**
      * Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on
@@ -136,7 +146,7 @@ public class EntityStarfish extends EntityAnimal
     public boolean isBreedingItem(ItemStack p_70877_1_)
     {
     	
-        return this.isInWater() && p_70877_1_ != null && p_70877_1_.getItem() == Items.cookie;
+        return this.isInWater() && p_70877_1_.getItem() == Items.cookie;
     }
     
     /**
