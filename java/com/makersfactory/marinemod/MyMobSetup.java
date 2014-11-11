@@ -40,7 +40,7 @@ public class MyMobSetup {
 	}
 	
 	public static void registerEntityElephantSeal(MarineMod mod) {
-		createEntity(mod, EntityElephantSeal.class, "EntityElephantSeal", 0xE7ABFF, 0x7700A6);
+		createEntity(mod, EntityElephantSeal.class, "ElephantSeal", 0x000000, 0xFFFFFF);
 	}
 	
 	public static void registerSeagull(MarineMod mod) {
@@ -69,7 +69,7 @@ public class MyMobSetup {
 			EntityRegistry.addSpawn(entityClass, 6, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
 		}
 		
-		if (entityName == "EntityElephantSeal") {
+		if (entityName == "ElephantSeal") {
 			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
 		}
 	}
