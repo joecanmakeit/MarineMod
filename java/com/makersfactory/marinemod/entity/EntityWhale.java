@@ -62,10 +62,16 @@ public class EntityWhale extends EntityWaterMob {
         return true;
     }
     
+    public boolean canBePushed()
+    {
+    	return false;
+    }
+    
+    
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(100.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(50.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(1.0D);
     }
 

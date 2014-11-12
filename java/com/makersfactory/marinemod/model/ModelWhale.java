@@ -8,7 +8,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 
 
-
 public class ModelWhale extends ModelBase
 {
   //fields
