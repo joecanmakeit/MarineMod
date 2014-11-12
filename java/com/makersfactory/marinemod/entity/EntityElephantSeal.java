@@ -58,7 +58,7 @@ public class EntityElephantSeal extends EntityWaterMob
 	public EntityElephantSeal(World p_i1695_1_)
 	{
 		super(p_i1695_1_);
-		// this.setSize(0.95F, 0.95F); // todo adjust these numbers
+		this.setSize(2.5F, 2.0F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
 		this.scientificName = "Mirounga Angustrirostris";
 		this.rotationVelocity = 0;
 		this.setupAI();

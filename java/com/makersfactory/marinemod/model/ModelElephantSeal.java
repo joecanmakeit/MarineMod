@@ -73,17 +73,19 @@ public class ModelElephantSeal extends ModelBase {
 		Head.mirror = true;
 		setRotation(Head, 0F, 0F, 0F);
 		RightForwardFlipper = new ModelRenderer(this, 61, 126);
-		RightForwardFlipper.addBox(0F, 0F, 0F, 3, 1, 4);
+		RightForwardFlipper.addBox(-4F, 0F, 0F, 4, 1, 3);
 		RightForwardFlipper.setRotationPoint(-5F, 19F, 11F);
 		RightForwardFlipper.setTextureSize(302, 186);
 		RightForwardFlipper.mirror = true;
-		setRotation(RightForwardFlipper, 0F, -1.570796F, 0F);
-		LeftForwardFlipper = new ModelRenderer(this, 20, 150);
-		LeftForwardFlipper.addBox(0F, 0F, 0F, 3, 1, 4);
-		LeftForwardFlipper.setRotationPoint(5F, 20F, 11F);
+		//setRotation(RightForwardFlipper, 0.7854F, -0.7854F, 0F);
+		setRotation(RightForwardFlipper, 0F, 0F, 0F);
+		LeftForwardFlipper = new ModelRenderer(this, 20, 150);//
+		LeftForwardFlipper.addBox(0F, 0F, 0F, 4, 1, 3);
+		LeftForwardFlipper.setRotationPoint(5F, 19F, 11F);
 		LeftForwardFlipper.setTextureSize(302, 186);
 		LeftForwardFlipper.mirror = true;
-		setRotation(LeftForwardFlipper, 0F, 1.570796F, 3.141593F);
+		//setRotation(LeftForwardFlipper, 0.7854F, 0.7854F, 0F);
+		setRotation(LeftForwardFlipper, 0F, 0F, 0F);
 		Nose = new ModelRenderer(this, 32, 40);
 		Nose.addBox(0F, 0F, 0F, 2, 3, 1);
 		Nose.setRotationPoint(-1F, 18F, 2F);

@@ -34,7 +34,7 @@ public class EntityAISwim extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		// Occasionally do nothing. TODO correct?
-		if (Math.random() > 0.1D) {
+		if (this.theEntity.isInWater() && Math.random() > 0.1D) {
 			return true;
 		} else {
 			return false;

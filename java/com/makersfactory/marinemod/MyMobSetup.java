@@ -19,7 +19,7 @@ public class MyMobSetup {
 		registerGull(mod);
 		registerStarfish(mod);
 		registerWhale(mod);
-		registerEntityElephantSeal(mod);
+		registerElephantSeal(mod);
 		registerSeagull(mod);
 	}
 	
@@ -39,7 +39,7 @@ public class MyMobSetup {
 		createEntity(mod, EntityWhale.class, "Whale", 0xE7ABFF, 0x7700A6);
 	}
 	
-	public static void registerEntityElephantSeal(MarineMod mod) {
+	public static void registerElephantSeal(MarineMod mod) {
 		createEntity(mod, EntityElephantSeal.class, "ElephantSeal", 0x000000, 0xFFFFFF);
 	}
 	
