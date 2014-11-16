@@ -41,14 +41,14 @@ public class EntityWhale extends EntityWaterMob {
 		super(par1World);
 		this.isImmuneToFire = true;
 		
-		this.tasks.addTask(1, new EntityAISwimming(this));
+		this.tasks.addTask(3, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIPanic(this, 1.4D));
 		//this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
-		this.tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.fish, false));
+		this.tasks.addTask(4, new EntityAITempt(this, 1.0D, Items.fish, false));
 		//this.tasks.addTask(4, new EntityAIFollowParent(this, 1.1D));
 		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
-        this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-        this.tasks.addTask(5, new EntityAILookIdle(this));
+        this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+        this.tasks.addTask(1, new EntityAILookIdle(this));
         
 	}
     
@@ -62,10 +62,16 @@ public class EntityWhale extends EntityWaterMob {
         return true;
     }
     
+    public boolean canBePushed()
+    {
+    	return false;
+    }
+    
+    
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(100.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(50.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(1.0D);
     }
 

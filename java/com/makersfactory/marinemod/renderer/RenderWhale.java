@@ -59,9 +59,19 @@ public class RenderWhale extends RenderLiving {
      * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
      * entityLiving, partialTickTime
      */
-    protected void preRenderCallback(EntityLivingBase par1EntityLivingBase, float par2)
+    /*protected void preRenderCallback(EntityLivingBase par1EntityLivingBase, float par2)
     {
         this.preRenderCallback((EntityWhale)par1EntityLivingBase, par2);
+    }*/
+    
+    protected void preRenderCallback(EntityLivingBase par1EntityLivingBase, float par2)
+    {
+        this.scaleWhale((EntityWhale)par1EntityLivingBase, par2);
+        
+    }
+    protected void scaleWhale(EntityWhale par1EntityCaveWhale, float par2)
+    {
+        GL11.glScalef(3.0F, 3.0F, 3.0F);
     }
 
     /**
