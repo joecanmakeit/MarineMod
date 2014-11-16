@@ -11,11 +11,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
@@ -71,7 +73,7 @@ public class EntityElephantSeal extends EntityWaterMob
 	{
 		super(p_i1695_1_);
 		System.out.println("EntityElephantSeal: Ctor");
-		this.setSize(0.5F, 0.5F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
+		this.setSize(0.5F, 1.0F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
 		this.scientificName = "Mirounga Angustrirostris";
 		this.rotationVelocity = 0;
 		this.setupAI();
@@ -81,9 +83,16 @@ public class EntityElephantSeal extends EntityWaterMob
 		this.spawnZ = this.posZ;
 		// find the sand close to the spawn point of the seal.
 		boolean not_found = true;
-		for (int i_z = 0; i_z < 500 && not_found; ++i_z) {
-			for (int i_y = 0; i_y < 500 && not_found; ++i_y) {
-				for (int i_x = 0; i_x < 500 && not_found; ++i_x) {
+		int ttt1 = 0;
+		int ttt2 = 0;		
+		this.getNavigator().setCanSwim(true);
+		this.getNavigator().setAvoidSun(false);
+		this.getNavigator().setAvoidsWater(false);
+		this.getNavigator().setSpeed(this.swimSpeed);
+		System.out.println("Can navi: ground[" + this.onGround + "] || water[" + isInWater() + "]");
+		for (int i_z = 0; i_z < 300 && not_found; ++i_z) {
+			for (int i_y = 0; i_y < 300 && not_found; ++i_y) {
+				for (int i_x = 0; i_x < 300 && not_found; ++i_x) {
 					
 					// try adding and subtracting the z,y,x vals
 					for (int tmp_z : new int[]{i_z, -i_z}) {
@@ -91,13 +100,19 @@ public class EntityElephantSeal extends EntityWaterMob
 							for (int tmp_x : new int[]{i_x, -i_x}) {
 								if (not_found && this.worldObj.getBlock((int)this.posX+tmp_x,(int)this.posY+tmp_y,(int)this.posZ+tmp_z) == Blocks.sand) {
 									PathEntity possiblePath = this.getNavigator().getPathToXYZ((int)this.posX+tmp_x,(int)this.posY+tmp_y,(int)this.posZ+tmp_z);
-									if (possiblePath != null && !possiblePath.isFinished()) {
-										this.nearByBeachX = (int)this.posX+tmp_x;
-										this.nearByBeachY = (int)this.posY+tmp_y;
-										this.nearByBeachZ = (int)this.posZ+tmp_z;
-										not_found = false;
+									if (possiblePath != null) {
+										if (!possiblePath.isFinished()) {
+											this.nearByBeachX = (int)this.posX+tmp_x;
+											this.nearByBeachY = (int)this.posY+tmp_y;
+											this.nearByBeachZ = (int)this.posZ+tmp_z;
+											not_found = false;
+										} else {
+											//System.out.println("found sand but you can't reach it: [2] path was at end");
+											ttt2++;
+										}
 									} else {
-										System.out.println("found sand but you can't reach it");
+										//System.out.println("found sand but you can't reach it: [1] path was null");
+										ttt1++;
 									}
 								}
 							}
@@ -107,9 +122,15 @@ public class EntityElephantSeal extends EntityWaterMob
 				}
 			}
 		}
-		if (not_found && aiHeadToBeach != null) {
+		
+		System.out.println("found sand but you can't reach it: [1] path was null " + ttt1 + " times");
+		System.out.println("found sand but you can't reach it: [2] path was null " + ttt2 + " times");
+		
+		if (not_found) {
 			System.out.println("EntityElephantSeal: Couldn't find a beach");
-			tasks.removeTask(aiHeadToBeach);
+			if (aiHeadToBeach != null) {
+				tasks.removeTask(aiHeadToBeach);
+			}
 		} else {
 			System.out.println("EntityElephantSeal: Found a beach");
 		}
