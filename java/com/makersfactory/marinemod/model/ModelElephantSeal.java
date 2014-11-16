@@ -73,13 +73,13 @@ public class ModelElephantSeal extends ModelBase {
 		Head.mirror = true;
 		setRotation(Head, 0F, 0F, 0F);
 		RightForwardFlipper = new ModelRenderer(this, 61, 126);
-		RightForwardFlipper.addBox(-4F, 0F, 0F, 4, 1, 3);
+		RightForwardFlipper.addBox(-4F, 0F, 0F, 4, 1, 3); // move the rotation ball so it is against the body. 
 		RightForwardFlipper.setRotationPoint(-5F, 19F, 11F);
 		RightForwardFlipper.setTextureSize(302, 186);
 		RightForwardFlipper.mirror = true;
 		//setRotation(RightForwardFlipper, 0.7854F, -0.7854F, 0F);
 		setRotation(RightForwardFlipper, 0F, 0F, 0F);
-		LeftForwardFlipper = new ModelRenderer(this, 20, 150);//
+		LeftForwardFlipper = new ModelRenderer(this, 20, 150);
 		LeftForwardFlipper.addBox(0F, 0F, 0F, 4, 1, 3);
 		LeftForwardFlipper.setRotationPoint(5F, 19F, 11F);
 		LeftForwardFlipper.setTextureSize(302, 186);

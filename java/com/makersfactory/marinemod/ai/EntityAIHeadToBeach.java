@@ -42,7 +42,7 @@ public class EntityAIHeadToBeach extends EntityAIBase {
 		// DEBUG
 		System.out.println("EntityAIHeadToBeach startExecute()");
 		// Find path to the spawn beach
-		this.theEntity.getNavigator().tryMoveToXYZ(theEntity.spawnX, theEntity.spawnY, theEntity.spawnZ, theEntity.swimSpeed);
+		this.theEntity.getNavigator().tryMoveToXYZ(theEntity.nearByBeachX, theEntity.nearByBeachY, theEntity.nearByBeachZ, theEntity.swimSpeed);
 		//BiomeGenBase.getBiomeGenArray();
 		//BiomeGenBase[] biomes = BiomeDictionary.getBiomesForType(Type.BEACH);	
 		//this.entityObj.worldObj.villageCollectionObj.findNearestVillage(i, j, k, 14);

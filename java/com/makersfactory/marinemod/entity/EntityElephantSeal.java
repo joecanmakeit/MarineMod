@@ -4,15 +4,20 @@ import java.util.Date;
 import java.util.Random;
 
 import com.makersfactory.marinemod.ai.EntityAIHeadToBeach;
+import com.makersfactory.marinemod.ai.EntityAISwim;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityWaterMob;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 
 /*
@@ -45,27 +50,69 @@ public class EntityElephantSeal extends EntityWaterMob
 	protected String scientificName;
 	// variables for state / AI
 	protected EntityAIBase aiHeadToBeach;
+	protected EntityAIBase aiMySwim;
+	protected EntityAIBase aiWander;
 	protected boolean isOnBeach;
 	/** expressed in epoch time (milliseconds) as returned by java.util.Date.getTime() **/
 	protected long lastTimeEnteredBeach;
-	protected boolean isSwimming;
 	
 	public double spawnX;
 	public double spawnY;
 	public double spawnZ;
+	/** X coordinate of the sand part of a nearby beach the seal will occasionally go to **/
+	public double nearByBeachX;
+	/** Y coordinate of the sand part of a nearby beach the seal will occasionally go to **/
+	public double nearByBeachY;
+	/** Z coordinate of the sand part of a nearby beach the seal will occasionally go to **/
+	public double nearByBeachZ;
 	public double swimSpeed;
 	
 	public EntityElephantSeal(World p_i1695_1_)
 	{
 		super(p_i1695_1_);
-		this.setSize(2.5F, 2.0F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
+		System.out.println("EntityElephantSeal: Ctor");
+		this.setSize(0.5F, 0.5F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
 		this.scientificName = "Mirounga Angustrirostris";
 		this.rotationVelocity = 0;
 		this.setupAI();
+		this.swimSpeed = 1.0D; // TODO set appropriately
 		this.spawnX = this.posX;
 		this.spawnY = this.posY;
 		this.spawnZ = this.posZ;
-		this.swimSpeed = 1.0D; // TODO set appropriately
+		// find the sand close to the spawn point of the seal.
+		boolean not_found = true;
+		for (int i_z = 0; i_z < 500 && not_found; ++i_z) {
+			for (int i_y = 0; i_y < 500 && not_found; ++i_y) {
+				for (int i_x = 0; i_x < 500 && not_found; ++i_x) {
+					
+					// try adding and subtracting the z,y,x vals
+					for (int tmp_z : new int[]{i_z, -i_z}) {
+						for (int tmp_y : new int[]{i_y, -i_y}) {
+							for (int tmp_x : new int[]{i_x, -i_x}) {
+								if (not_found && this.worldObj.getBlock((int)this.posX+tmp_x,(int)this.posY+tmp_y,(int)this.posZ+tmp_z) == Blocks.sand) {
+									PathEntity possiblePath = this.getNavigator().getPathToXYZ((int)this.posX+tmp_x,(int)this.posY+tmp_y,(int)this.posZ+tmp_z);
+									if (possiblePath != null && !possiblePath.isFinished()) {
+										this.nearByBeachX = (int)this.posX+tmp_x;
+										this.nearByBeachY = (int)this.posY+tmp_y;
+										this.nearByBeachZ = (int)this.posZ+tmp_z;
+										not_found = false;
+									} else {
+										System.out.println("found sand but you can't reach it");
+									}
+								}
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		if (not_found && aiHeadToBeach != null) {
+			System.out.println("EntityElephantSeal: Couldn't find a beach");
+			tasks.removeTask(aiHeadToBeach);
+		} else {
+			System.out.println("EntityElephantSeal: Found a beach");
+		}
 	}
 
     /**
@@ -82,7 +129,10 @@ public class EntityElephantSeal extends EntityWaterMob
        getNavigator().setAvoidsWater(false);
        clearAITasks(); // clear any tasks assigned in super classes
        //good to have instances of AI so task list can be modified, including in subclasses
-       aiHeadToBeach = new EntityAIHeadToBeach(this);
+       //aiWander = new EntityAIWander(this, 1.0D);
+       //aiHeadToBeach = new EntityAIHeadToBeach(this);
+       aiMySwim = new EntityAISwim(this);
+      
        /*protected EntityAIBase aiSwimming = new EntityAISwimming(this);
        protected EntityAIBase aiLeapAtTarget = new EntityAILeapAtTarget(this, 0.4F);
        protected EntityAIBase aiAttackOnCollide = new EntityAIAttackOnCollide(this, 
@@ -122,7 +172,9 @@ public class EntityElephantSeal extends EntityWaterMob
        tasks.addTask(10, new EntityAILookIdle(this));
        targetTasks.addTask(0, new EntityAIHurtByTargetHerdAnimal(this, true)); */
        
-       tasks.addTask(8, aiHeadToBeach);
+       tasks.addTask(1, aiMySwim);
+       // tasks.addTask(1, aiWander);
+      // tasks.addTask(8, aiHeadToBeach);
     }
 
     protected void clearAITasks()
@@ -143,8 +195,7 @@ public class EntityElephantSeal extends EntityWaterMob
 	// protected String getDeathSound() { // todo set in children
 	// protected float getSoundVolume() { // todo set in children
 
-	protected Item getDropItem()
-	{ // todo remove?
+	protected Item getDropItem() { // TODO remove?
 		return Item.getItemById(0);
 	}
 
@@ -167,93 +218,14 @@ public class EntityElephantSeal extends EntityWaterMob
 	public void onLivingUpdate()
 	{
 		super.onLivingUpdate();
-		this.prevSealPitch = this.sealPitch;
-		this.prevSealYaw = this.sealYaw;
-		this.prevSealRotation = this.sealRotation;
-		this.sealRotation += this.rotationVelocity;
-
-		if (this.sealRotation > ((float) Math.PI * 2F)) { // if rotation angle > 2pi
-			this.sealRotation -= ((float) Math.PI * 2F); // rotation angle -= 2pi 
-
-			if (this.rand.nextInt(10) == 0) { // 10% chance // TODO change?
-				this.rotationVelocity = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F; // rotation velocity = [.105,.2]// TODO change?
-			}
-		}
-/*
-		if (this.isInWater()) {
-			float f;
-
-			if (this.squidRotation < (float) Math.PI) { // if not rotated upside down
-				f = this.squidRotation / (float) Math.PI; // f = % rotated 
-
-				if ((double) f > 0.75D) { // if > 75% rotated
-					this.randomMotionSpeed = 1.0F;
-					this.field_70871_bB = 1.0F;
-				} else {
-					this.field_70871_bB *= 0.8F;
-				}
-			} else {
-				this.tentacleAngle = 0.0F;
-				this.randomMotionSpeed *= 0.9F;
-				this.field_70871_bB *= 0.99F;
-			}
-
-			if (!this.worldObj.isRemote) {
-				this.motionX = (double) (this.randomMotionVecX * this.randomMotionSpeed);
-				this.motionY = (double) (this.randomMotionVecY * this.randomMotionSpeed);
-				this.motionZ = (double) (this.randomMotionVecZ * this.randomMotionSpeed);
-			}
-
-			f = MathHelper.sqrt_double(this.motionX * this.motionX
-					+ this.motionZ * this.motionZ);
-			this.renderYawOffset += (-((float) Math.atan2(this.motionX,
-					this.motionZ)) * 180.0F / (float) Math.PI - this.renderYawOffset) * 0.1F;
-			this.rotationYaw = this.renderYawOffset;
-			this.squidYaw += (float) Math.PI * this.field_70871_bB * 1.5F;
-			this.squidPitch += (-((float) Math.atan2((double) f, this.motionY))
-					* 180.0F / (float) Math.PI - this.squidPitch) * 0.1F;
-		} else {
-			this.tentacleAngle = MathHelper.abs(MathHelper
-					.sin(this.squidRotation)) * (float) Math.PI * 0.25F;
-
-			if (!this.worldObj.isRemote) {
-				this.motionX = 0.0D;
-				this.motionY -= 0.08D;
-				this.motionY *= 0.9800000190734863D;
-				this.motionZ = 0.0D;
-			}
-
-			this.squidPitch = (float) ((double) this.squidPitch + (double) (-90.0F - this.squidPitch) * 0.02D);
-		}
-		*/
+		
 	}
 
-	/**
-	 * Moves the entity based on the specified heading. Args: strafe, forward
-	 */
-	public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_)
-	{
-		this.moveEntity(this.motionX, this.motionY, this.motionZ);
-	}
-
-	protected void updateEntityActionState()
-	{
-		++this.entityAge;
-/*
-		if (this.entityAge > 100) {
-			this.randomMotionVecX = this.randomMotionVecY = this.randomMotionVecZ = 0.0F;
-		} else if (this.rand.nextInt(50) == 0 || !this.inWater
-				|| this.randomMotionVecX == 0.0F
-				&& this.randomMotionVecY == 0.0F
-				&& this.randomMotionVecZ == 0.0F) {
-			float f = this.rand.nextFloat() * (float) Math.PI * 2.0F;
-			this.randomMotionVecX = MathHelper.cos(f) * 0.2F;
-			this.randomMotionVecY = -0.1F + this.rand.nextFloat() * 0.2F;
-			this.randomMotionVecZ = MathHelper.sin(f) * 0.2F;
-		}
-*/
-		this.despawnEntity();
-	}
+    protected void updateEntityActionState()
+    {
+        ++this.entityAge;
+        this.despawnEntity();
+    }
 
 	/**
 	 * Checks if the entity's current position is a valid location to spawn this
@@ -267,10 +239,15 @@ public class EntityElephantSeal extends EntityWaterMob
 
 	public boolean isOnBeach()
 	{
-		return this.isOnBeach;
+		return ((!this.isInWater()) && getBiome().equals(BiomeGenBase.beach)); // TODO fix so it check explicitly that you are on sand
+	}
+	
+	public void setOnBeach()
+	{
+		lastTimeEnteredBeach = (new Date()).getTime();
 	}
 
-	/** Occasionally beach: "The northern elephant seals are nocturnal deep feeders famous for the long time intervals they remain underwater." - http://en.wikipedia.org/wiki/Northern_elephant_seal
+	/** Occasionally beach: "The northern elephant seals are nocturnal deep feeders famous for the long time intervals they remain under water." - http://en.wikipedia.org/wiki/Northern_elephant_seal
 	 * 	  if it is currently not beached...
 	 * 	    and it has been at least 6 minutes since the last time beaching: beach 10% likely
 	 * 		and it has been at least 9 minutes since the last time beaching: beach 15% likely
@@ -296,11 +273,6 @@ public class EntityElephantSeal extends EntityWaterMob
 		
 		return (Math.random() <= threshold_percentage);
 	}
-
-	public void setSwimming(boolean swim_val)
-	{
-		isSwimming = swim_val;
-	}
 	
 	// return the block under the entity
 //	public Block findBlockUnder()
@@ -310,7 +282,16 @@ public class EntityElephantSeal extends EntityWaterMob
 //	    int blockZ = MathHelper.floor_double(this.posZ);
 //	    return this.worldObj.getBlock(blockX, blockY, blockZ);
 //	}
-	
+
+    /**
+     * Checks if this entity is inside water (if inWater field is true as a result of handleWaterMovement() returning
+     * true)
+     */
+    public boolean isInWater()
+    {
+        return this.worldObj.handleMaterialAcceleration(this.boundingBox.expand(0.0D, -0.6000000238418579D, 0.0D), Material.water, this);
+    }
+	/*
 	public int[] posToBlockPos() {
 		int[] blockPositions = new int[2]; // [x,z]
 		
@@ -325,5 +306,9 @@ public class EntityElephantSeal extends EntityWaterMob
 		} else {
 			return null;
 		}
+	}
+	*/
+	public BiomeGenBase getBiome () {
+		return (this.worldObj.getBiomeGenForCoords(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ)));
 	}
 }
