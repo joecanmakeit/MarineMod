@@ -73,8 +73,9 @@ public class EntityElephantSeal extends EntityWaterMob
 	{
 		super(p_i1695_1_);
 		System.out.println("EntityElephantSeal: Ctor");
-		this.setSize(0.5F, 1.0F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
+		this.setSize(1.0F, 0.5F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
 		this.scientificName = "Mirounga Angustrirostris";
+		this.isImmuneToFire = true;
 		this.rotationVelocity = 0;
 		this.setupAI();
 		this.swimSpeed = 1.0D; // TODO set appropriately
@@ -90,7 +91,13 @@ public class EntityElephantSeal extends EntityWaterMob
 		this.getNavigator().setAvoidsWater(false);
 		this.getNavigator().setSpeed(this.swimSpeed);
 		System.out.println("Can navi: ground[" + this.onGround + "] || water[" + isInWater() + "]");
-		for (int i_z = 0; i_z < 300 && not_found; ++i_z) {
+		boolean tmpwaterbool1=this.worldObj.handleMaterialAcceleration(this.boundingBox, Material.water, this);
+		boolean tmpwaterbool2=this.worldObj.getBlock((int)this.posX,(int)this.posY,(int)this.posZ) == Blocks.water;
+		boolean tmpwaterbool3=this.worldObj.getBlock((int)this.posX+1,(int)this.posY,(int)this.posZ) == Blocks.water;
+		boolean tmpwaterbool4=this.worldObj.getBlock((int)this.posX-1,(int)this.posY,(int)this.posZ) == Blocks.water;
+		System.out.println("water checks: " + tmpwaterbool1 +" " + tmpwaterbool2 + " " + tmpwaterbool3 + " " + tmpwaterbool4);
+		printPos();
+		/*for (int i_z = 0; i_z < 300 && not_found; ++i_z) {
 			for (int i_y = 0; i_y < 300 && not_found; ++i_y) {
 				for (int i_x = 0; i_x < 300 && not_found; ++i_x) {
 					
@@ -133,9 +140,19 @@ public class EntityElephantSeal extends EntityWaterMob
 			}
 		} else {
 			System.out.println("EntityElephantSeal: Found a beach");
-		}
+		}*/
 	}
 
+	/** for debugging. print (floor(posX), floor(posY), floor(posZ)) to the screen **/
+	private void printPos () {
+		System.out.printf("(%d, %d, %d)%n",(int)this.posX,(int)this.posY,(int)this.posZ);
+	}
+	
+	protected void entityInit(){
+		super.entityInit();
+		printPos();
+	}
+	
     /**
      * Returns true if the newer Entity AI code should be run
      */
@@ -152,7 +169,7 @@ public class EntityElephantSeal extends EntityWaterMob
        //good to have instances of AI so task list can be modified, including in subclasses
        //aiWander = new EntityAIWander(this, 1.0D);
        //aiHeadToBeach = new EntityAIHeadToBeach(this);
-       aiMySwim = new EntityAISwim(this);
+      // aiMySwim = new EntityAISwim(this);
       
        /*protected EntityAIBase aiSwimming = new EntityAISwimming(this);
        protected EntityAIBase aiLeapAtTarget = new EntityAILeapAtTarget(this, 0.4F);
@@ -193,7 +210,7 @@ public class EntityElephantSeal extends EntityWaterMob
        tasks.addTask(10, new EntityAILookIdle(this));
        targetTasks.addTask(0, new EntityAIHurtByTargetHerdAnimal(this, true)); */
        
-       tasks.addTask(1, aiMySwim);
+      // tasks.addTask(1, aiMySwim);
        // tasks.addTask(1, aiWander);
       // tasks.addTask(8, aiHeadToBeach);
     }
@@ -207,18 +224,18 @@ public class EntityElephantSeal extends EntityWaterMob
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		//this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);  // todo set in children
+		//this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);  TODO
 	}
 
 	
-	// protected String getLivingSound() { // todo set in children
-	// protected String getHurtSound() { // todo set in children
-	// protected String getDeathSound() { // todo set in children
-	// protected float getSoundVolume() { // todo set in children
+	// protected String getLivingSound() { TODO
+	// protected String getHurtSound() { TODO
+	// protected String getDeathSound() { TODO
+	// protected float getSoundVolume() { TODO
 
-	protected Item getDropItem() { // TODO remove?
-		return Item.getItemById(0);
-	}
+//	protected Item getDropItem() { // TODO remove?
+//		return Item.getItemById(0);
+//	}
 
 	/**
 	 * returns if this entity triggers Block.onEntityWalking on the blocks they
@@ -258,6 +275,7 @@ public class EntityElephantSeal extends EntityWaterMob
 				&& super.getCanSpawnHere(); // TODO change. Where do these number come from?
 	}
 
+	/** true if on the sand and in a beach biome **/
 	public boolean isOnBeach()
 	{
 		return ((!this.isInWater()) && getBiome().equals(BiomeGenBase.beach)); // TODO fix so it check explicitly that you are on sand
@@ -307,10 +325,12 @@ public class EntityElephantSeal extends EntityWaterMob
     /**
      * Checks if this entity is inside water (if inWater field is true as a result of handleWaterMovement() returning
      * true)
+     * TODO figure out what the proper function is. Is the squid just hackin?
      */
     public boolean isInWater()
     {
-        return this.worldObj.handleMaterialAcceleration(this.boundingBox.expand(0.0D, -0.6000000238418579D, 0.0D), Material.water, this);
+    	return super.isInWater();
+        //return this.worldObj.handleMaterialAcceleration(this.boundingBox.expand(0.0D, -0.6000000238418579D, 0.0D), Material.water, this); // how the squid entity does it	
     }
 	/*
 	public int[] posToBlockPos() {

@@ -74,7 +74,7 @@ public class EntityAISwim extends EntityAIBase {
 	public boolean continueExecuting() {
 		boolean continueExecuting = !this.theEntity.getNavigator().noPath();
 		// DEBUG
-		System.out.println("EntityAIHeadToBeach continueExecuting ="
+		System.out.println("EntityAISwim continueExecuting ="
 				+ continueExecuting);
 		return (continueExecuting);
 	}
