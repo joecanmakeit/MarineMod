@@ -1,5 +1,6 @@
 package com.makersfactory.marinemod;
 
+import com.makersfactory.marinemod.entity.EntityDolphin;
 import com.makersfactory.marinemod.entity.EntityElephantSeal;
 import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
@@ -21,6 +22,7 @@ public class MyMobSetup {
 		registerWhale(mod);
 		registerElephantSeal(mod);
 		registerSeagull(mod);
+		registerDolphin(mod);
 	}
 	
 	public static void registerJellyfish(MarineMod mod) {
@@ -47,6 +49,10 @@ public class MyMobSetup {
 		createEntity(mod, EntitySeagull.class, "Seagull", 0xE7E6DD, 0xF4B400);
 	}
 	
+	public static void registerDolphin(MarineMod mod) {
+		createEntity(mod, EntityDolphin.class, "Dolphin", 0xE7E6DD, 0xF4B400);
+	}
+	
 	public static void createEntity(MarineMod mod, Class entityClass, String entityName, int solidColor, int spotColor) {
 		int randomID = EntityRegistry.findGlobalUniqueEntityId();
 		
@@ -71,6 +77,11 @@ public class MyMobSetup {
 		
 		if (entityName == "ElephantSeal") {
 		//	EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
+		}
+		
+		if (entityName == "Dolphin") {
+			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
+			EntityRegistry.addSpawn(entityClass, 6, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
 		}
 	}
 

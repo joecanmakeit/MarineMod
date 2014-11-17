@@ -1,5 +1,6 @@
 package com.makersfactory.marinemod.entity;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMate;
@@ -26,9 +27,41 @@ public class EntityDolphin extends EntityWaterMob {
         this.tasks.addTask(5, new EntityAILookIdle(this));
 	}
 
+
+    public void onUpdate()
+    {
+        super.onUpdate();
+    }
+    
     public boolean isAIEnabled()
     {
         return true;
     }
+    
+    public boolean canBePushed()
+    {
+    	return false;
+    }
+    
+    
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(50.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(1.0D);
+    }
+
+     // Returns the sound this mob makes when it is hurt.
+    protected String getHurtSound()
+    {
+        return "mob.pig.say";
+    }
+
+     //Returns the sound this mob makes on death.
+    protected String getDeathSound()
+    {
+        return "mob.pig.death";
+    }
+	
 	
 }
