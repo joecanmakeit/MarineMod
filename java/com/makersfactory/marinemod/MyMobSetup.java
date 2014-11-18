@@ -61,27 +61,27 @@ public class MyMobSetup {
 		createEgg(randomID, solidColor, spotColor);
 		
 		if (entityName == "Starfish") {
-			EntityRegistry.addSpawn(entityClass, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.beach);
-			EntityRegistry.addSpawn(entityClass, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.ocean);
+		//	EntityRegistry.addSpawn(entityClass, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.beach);
+		//	EntityRegistry.addSpawn(entityClass, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.ocean);
 		}
 		
 		if (entityName == "Seagull") {
-			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
-			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
+		//	EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
+		//	EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
 		}
 		
 		if (entityName == "Whale") {
-			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
-			EntityRegistry.addSpawn(entityClass, 6, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
+		//	EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
+		//	EntityRegistry.addSpawn(entityClass, 6, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
 		}
 		
 		if (entityName == "ElephantSeal") {
-			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
+			EntityRegistry.addSpawn(entityClass, 9, 1, 1, EnumCreatureType.creature, BiomeGenBase.beach); // TODO change spawn probability	
 		}
 		
 		if (entityName == "Dolphin") {
-			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
-			EntityRegistry.addSpawn(entityClass, 6, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
+		//	EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
+		//	EntityRegistry.addSpawn(entityClass, 6, 1, 3, EnumCreatureType.creature, BiomeGenBase.ocean);
 		}
 	}
 
