@@ -76,7 +76,7 @@ public class MyMobSetup {
 		}
 		
 		if (entityName == "ElephantSeal") {
-		//	EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
+			EntityRegistry.addSpawn(entityClass, 5, 1, 3, EnumCreatureType.creature, BiomeGenBase.beach);
 		}
 		
 		if (entityName == "Dolphin") {

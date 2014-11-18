@@ -6,6 +6,7 @@ import java.util.Random;
 import com.makersfactory.marinemod.ai.EntityAIHeadToBeach;
 import com.makersfactory.marinemod.ai.EntityAISwim;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -21,6 +22,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 
 /*
  * 
@@ -69,6 +71,8 @@ public class EntityElephantSeal extends EntityWaterMob
 	public double nearByBeachZ;
 	public double swimSpeed;
 	
+	static int counttt = 0;	/// spawned count. used for debugging only
+	
 	public EntityElephantSeal(World p_i1695_1_)
 	{
 		super(p_i1695_1_);
@@ -96,7 +100,7 @@ public class EntityElephantSeal extends EntityWaterMob
 		boolean tmpwaterbool3=this.worldObj.getBlock((int)this.posX+1,(int)this.posY,(int)this.posZ) == Blocks.water;
 		boolean tmpwaterbool4=this.worldObj.getBlock((int)this.posX-1,(int)this.posY,(int)this.posZ) == Blocks.water;
 		System.out.println("water checks: " + tmpwaterbool1 +" " + tmpwaterbool2 + " " + tmpwaterbool3 + " " + tmpwaterbool4);
-		printPos();
+		printPos("ctor");
 		/*for (int i_z = 0; i_z < 300 && not_found; ++i_z) {
 			for (int i_y = 0; i_y < 300 && not_found; ++i_y) {
 				for (int i_x = 0; i_x < 300 && not_found; ++i_x) {
@@ -144,13 +148,13 @@ public class EntityElephantSeal extends EntityWaterMob
 	}
 
 	/** for debugging. print (floor(posX), floor(posY), floor(posZ)) to the screen **/
-	private void printPos () {
-		System.out.printf("(%d, %d, %d)%n",(int)this.posX,(int)this.posY,(int)this.posZ);
+	public void printPos (String pre) {
+		System.out.printf("%s(%d, %d, %d)%n",pre, (int)this.posX,(int)this.posY,(int)this.posZ);
 	}
 	
 	protected void entityInit(){
 		super.entityInit();
-		printPos();
+		//printPos("entityInit: ");
 	}
 	
     /**
@@ -256,7 +260,9 @@ public class EntityElephantSeal extends EntityWaterMob
 	public void onLivingUpdate()
 	{
 		super.onLivingUpdate();
-		
+		/*if (this.entityAge % 1000 == 0) {
+			printPos("onLivingUpdate: ");
+		}*/
 	}
 
     protected void updateEntityActionState()
@@ -271,8 +277,12 @@ public class EntityElephantSeal extends EntityWaterMob
 	 */
 	public boolean getCanSpawnHere()
 	{
-		return this.posY > 45.0D && this.posY < 63.0D
-				&& super.getCanSpawnHere(); // TODO change. Where do these number come from?
+		boolean tmp = super.getCanSpawnHere();
+		System.out.println("seal $$$$$canSpawnHere: " + tmp);
+		System.out.flush();
+		return tmp;
+		//return this.posY > 45.0D && this.posY < 63.0D
+			//	&& super.getCanSpawnHere(); // TODO change. Where do these number come from?
 	}
 
 	/** true if on the sand and in a beach biome **/
