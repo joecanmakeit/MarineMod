@@ -94,11 +94,11 @@ public class EntityElephantSeal extends EntityWaterMob
 		this.getNavigator().setAvoidSun(false);
 		this.getNavigator().setAvoidsWater(false);
 		this.getNavigator().setSpeed(this.swimSpeed);
-		System.out.println("Can navi: ground[" + this.onGround + "] || water[" + isInWater() + "]");
-		boolean tmpwaterbool1=this.worldObj.handleMaterialAcceleration(this.boundingBox, Material.water, this);
-		boolean tmpwaterbool2=this.worldObj.getBlock((int)this.posX,(int)this.posY,(int)this.posZ) == Blocks.water;
-		boolean tmpwaterbool3=this.worldObj.getBlock((int)this.posX+1,(int)this.posY,(int)this.posZ) == Blocks.water;
-		boolean tmpwaterbool4=this.worldObj.getBlock((int)this.posX-1,(int)this.posY,(int)this.posZ) == Blocks.water;
+		//System.out.println("Can navi: ground[" + this.onGround + "] || water[" + isInWater() + "]");
+		//boolean tmpwaterbool1=this.worldObj.handleMaterialAcceleration(this.boundingBox, Material.water, this);
+		//boolean tmpwaterbool2=this.worldObj.getBlock((int)this.posX,(int)this.posY,(int)this.posZ) == Blocks.water;
+		//boolean tmpwaterbool3=this.worldObj.getBlock((int)this.posX+1,(int)this.posY,(int)this.posZ) == Blocks.water;
+		//boolean tmpwaterbool4=this.worldObj.getBlock((int)this.posX-1,(int)this.posY,(int)this.posZ) == Blocks.water;
 		System.out.println("water checks: " + tmpwaterbool1 +" " + tmpwaterbool2 + " " + tmpwaterbool3 + " " + tmpwaterbool4);
 		printPos("ctor");
 		/*for (int i_z = 0; i_z < 300 && not_found; ++i_z) {
@@ -277,8 +277,8 @@ public class EntityElephantSeal extends EntityWaterMob
 	 */
 	public boolean getCanSpawnHere()
 	{
-		boolean tmp = super.getCanSpawnHere();
-		System.out.println("seal $$$$$canSpawnHere: " + tmp);
+		boolean tmp = super.getCanSpawnHere() && this.isOnBeach();
+		System.out.println("seal canSpawnHere: " + tmp);
 		System.out.flush();
 		return tmp;
 		//return this.posY > 45.0D && this.posY < 63.0D

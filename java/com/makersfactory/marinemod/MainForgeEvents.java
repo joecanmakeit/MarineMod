@@ -27,17 +27,34 @@ public class MainForgeEvents {
 		
 	}
 	
-	/** Set the entity's position when it is spawned. Learned about from here...
+//	/** Set the entity's position when it is spawned. Learned about from here...
+//	 * http://www.minecraftforge.net/wiki/Event_Reference#LivingSpawnEvent
+//	 * http://www.minecraftforge.net/forum/index.php?topic=20376.0
+//	 * @author Desmond **/
+//	@SubscribeEvent
+//	public void onBirth(LivingSpawnEvent event) {
+//		if (!event.entity.worldObj.isRemote) {
+//			if (event.entity instanceof EntityElephantSeal) {
+//				((EntityElephantSeal)event.entity).printPos("***********birth callback: ");
+//			}
+//		}
+//	}
+	
+	/** They are about to spawn the entity. Check to see if the posistion is valid first..
 	 * http://www.minecraftforge.net/wiki/Event_Reference#LivingSpawnEvent
 	 * http://www.minecraftforge.net/forum/index.php?topic=20376.0
 	 * @author Desmond **/
 	@SubscribeEvent
-	public void onBirth(LivingSpawnEvent event) {
+	public void controlSpawn(EntityJoinWorldEvent event) {
 		if (!event.entity.worldObj.isRemote) {
 			if (event.entity instanceof EntityElephantSeal) {
-				((EntityElephantSeal)event.entity).printPos("***********birth callback: ");
+				((EntityElephantSeal)event.entity).printPos("***********controlSpawn callback: ");
+				if (! ((EntityElephantSeal)event.entity).getCanSpawnHere()) {
+					event.setCanceled(true);
+				}
 			}
 		}
 	}
+	
 	
 }
