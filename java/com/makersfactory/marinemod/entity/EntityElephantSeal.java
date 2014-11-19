@@ -77,7 +77,8 @@ public class EntityElephantSeal extends EntityWaterMob
 	{
 		super(p_i1695_1_);
 		System.out.println("EntityElephantSeal: Ctor");
-		this.setSize(1.0F, 0.5F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
+		this.setSize(1.0F, 0.5F, 2.0F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
+		//this.getBoundingBox().offset(p_72317_1_, p_72317_3_, p_72317_5_)
 		this.scientificName = "Mirounga Angustrirostris";
 		this.isImmuneToFire = true;
 		this.rotationVelocity = 0;
@@ -94,60 +95,23 @@ public class EntityElephantSeal extends EntityWaterMob
 		this.getNavigator().setAvoidSun(false);
 		this.getNavigator().setAvoidsWater(false);
 		this.getNavigator().setSpeed(this.swimSpeed);
+		boolean ss = this.onGround;
 		//System.out.println("Can navi: ground[" + this.onGround + "] || water[" + isInWater() + "]");
 		//boolean tmpwaterbool1=this.worldObj.handleMaterialAcceleration(this.boundingBox, Material.water, this);
 		//boolean tmpwaterbool2=this.worldObj.getBlock((int)this.posX,(int)this.posY,(int)this.posZ) == Blocks.water;
 		//boolean tmpwaterbool3=this.worldObj.getBlock((int)this.posX+1,(int)this.posY,(int)this.posZ) == Blocks.water;
 		//boolean tmpwaterbool4=this.worldObj.getBlock((int)this.posX-1,(int)this.posY,(int)this.posZ) == Blocks.water;
-		System.out.println("water checks: " + tmpwaterbool1 +" " + tmpwaterbool2 + " " + tmpwaterbool3 + " " + tmpwaterbool4);
-		printPos("ctor");
-		/*for (int i_z = 0; i_z < 300 && not_found; ++i_z) {
-			for (int i_y = 0; i_y < 300 && not_found; ++i_y) {
-				for (int i_x = 0; i_x < 300 && not_found; ++i_x) {
-					
-					// try adding and subtracting the z,y,x vals
-					for (int tmp_z : new int[]{i_z, -i_z}) {
-						for (int tmp_y : new int[]{i_y, -i_y}) {
-							for (int tmp_x : new int[]{i_x, -i_x}) {
-								if (not_found && this.worldObj.getBlock((int)this.posX+tmp_x,(int)this.posY+tmp_y,(int)this.posZ+tmp_z) == Blocks.sand) {
-									PathEntity possiblePath = this.getNavigator().getPathToXYZ((int)this.posX+tmp_x,(int)this.posY+tmp_y,(int)this.posZ+tmp_z);
-									if (possiblePath != null) {
-										if (!possiblePath.isFinished()) {
-											this.nearByBeachX = (int)this.posX+tmp_x;
-											this.nearByBeachY = (int)this.posY+tmp_y;
-											this.nearByBeachZ = (int)this.posZ+tmp_z;
-											not_found = false;
-										} else {
-											//System.out.println("found sand but you can't reach it: [2] path was at end");
-											ttt2++;
-										}
-									} else {
-										//System.out.println("found sand but you can't reach it: [1] path was null");
-										ttt1++;
-									}
-								}
-							}
-						}
-					}
-					
-				}
-			}
-		}
-		
-		System.out.println("found sand but you can't reach it: [1] path was null " + ttt1 + " times");
-		System.out.println("found sand but you can't reach it: [2] path was null " + ttt2 + " times");
-		
-		if (not_found) {
-			System.out.println("EntityElephantSeal: Couldn't find a beach");
-			if (aiHeadToBeach != null) {
-				tasks.removeTask(aiHeadToBeach);
-			}
-		} else {
-			System.out.println("EntityElephantSeal: Found a beach");
-		}*/
+		//System.out.println("water checks: " + tmpwaterbool1 +" " + tmpwaterbool2 + " " + tmpwaterbool3 + " " + tmpwaterbool4);
 	}
 
-	/** for debugging. print (floor(posX), floor(posY), floor(posZ)) to the screen **/
+	protected void setSize(float new_x, float new_y, float new_z) {
+        super.setSize(new_x, new_y);
+        this.boundingBox.maxZ = this.boundingBox.minZ + (double)new_z;
+        // TODO should I adjust "this.myEntitySize" ?
+        // TODO should I create a length field?
+	}
+
+	/** for debugging. print "pre(floor(posX), floor(posY), floor(posZ))" to the screen **/
 	public void printPos (String pre) {
 		System.out.printf("%s(%d, %d, %d)%n",pre, (int)this.posX,(int)this.posY,(int)this.posZ);
 	}
@@ -273,22 +237,85 @@ public class EntityElephantSeal extends EntityWaterMob
 
 	/**
 	 * Checks if the entity's current position is a valid location to spawn this
-	 * entity.
+	 * entity: must be in beach biome & super's method must be true. Also you should be
+	 * able to find above water sand close to the spawn point that is reachable by the entity. 
 	 */
 	public boolean getCanSpawnHere()
 	{
-		boolean tmp = super.getCanSpawnHere() && this.isOnBeach();
-		System.out.println("seal canSpawnHere: " + tmp);
-		System.out.flush();
-		return tmp;
-		//return this.posY > 45.0D && this.posY < 63.0D
-			//	&& super.getCanSpawnHere(); // TODO change. Where do these number come from?
+		if (!super.getCanSpawnHere()) return false;
+		if (!this.isInBeachBiome()) return false;
+return true; // TODO remove
+//		int nullPathCount = 0;
+//		int endPathCount = 0;
+//		boolean not_found = true;
+//		
+//		System.out.println("ori: " + ((int)this.posX) + " " + ((int)this.posY) + " " + ((int)this.posZ));
+//		
+//		/* for 300, 300by300 xz planes try to find a spawn point 
+//		 * (start with where you currently are) */
+//		for (int i_y = 0; i_y < 40 && not_found; ++i_y) {
+//			for (int i_z = 0; i_z < 50 && not_found; ++i_z) {
+//				for (int i_x = 0; i_x < 50 && not_found; ++i_x) {
+//					
+//					// try adding and subtracting the z,y,x vals
+//					for (int tmp_y : new int[]{i_y, -i_y}) {
+//						for (int tmp_z : new int[]{i_z, -i_z}) {
+//							for (int tmp_x : new int[]{i_x, -i_x}) {
+//								// if a block is sand and above it is air then we can spawn there (on the air block)
+//								if (not_found && 
+//									this.worldObj.getBlock((int)this.posX+tmp_x,(int)this.posY+tmp_y,(int)this.posZ+tmp_z) == Blocks.sand &&
+//									this.worldObj.getBlock((int)this.posX+tmp_x,(int)this.posY+tmp_y+1,(int)this.posZ+tmp_z) == Blocks.air)
+//								{
+//									boolean prev_onGround = this.onGround;
+//									this.onGround = true;
+//									PathEntity possiblePath = this.getNavigator().getPathToXYZ((int)this.posX+tmp_x,(int)this.posY+tmp_y+1,(int)this.posZ+tmp_z);
+//									if (possiblePath != null) {
+//										if (!possiblePath.isFinished()) {
+//											this.nearByBeachX = (int)this.posX+tmp_x;
+//											this.nearByBeachY = (int)this.posY+tmp_y+1;
+//											this.nearByBeachZ = (int)this.posZ+tmp_z;
+//											not_found = false;
+//										} else {
+//											//System.out.println("found sand but you can't reach it: path was at end");
+//											endPathCount++;
+//										}
+//									} else {
+//										//System.out.println("found sand but you can't reach it: path was null");
+//										nullPathCount++;
+//									}
+//									this.onGround = prev_onGround;
+//								}
+//							}
+//						}
+//					}
+//					
+//				}
+//			}
+//		}
+//		
+//		if (not_found) {
+//			System.out.println("EntityElephantSeal: Couldn't find a beach");
+//			System.out.println("found sand but you can't reach it: path was null " + nullPathCount + " times");
+//			System.out.println("found sand but you can't reach it: path was at end " + endPathCount + " times");
+//			if (aiHeadToBeach != null) {
+//				tasks.removeTask(aiHeadToBeach);
+//			}
+//		} else {
+//			System.out.println("EntityElephantSeal: Found a beach");
+//		}
+//	
+//		return !not_found;
 	}
 
+	public boolean isInBeachBiome()
+	{
+		return (this.getBiome().equals(BiomeGenBase.beach));
+	}
+	
 	/** true if on the sand and in a beach biome **/
 	public boolean isOnBeach()
 	{
-		return ((!this.isInWater()) && getBiome().equals(BiomeGenBase.beach)); // TODO fix so it check explicitly that you are on sand
+		return ((!this.isInWater()) && this.isInBeachBiome()); // TODO fix so it check explicitly that you are on sand
 	}
 	
 	public void setOnBeach()
@@ -359,7 +386,7 @@ public class EntityElephantSeal extends EntityWaterMob
 		}
 	}
 	*/
-	public BiomeGenBase getBiome () {
+	public BiomeGenBase getBiome() {
 		return (this.worldObj.getBiomeGenForCoords(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ)));
 	}
 }

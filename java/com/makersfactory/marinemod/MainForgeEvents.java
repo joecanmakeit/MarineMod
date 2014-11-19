@@ -50,6 +50,7 @@ public class MainForgeEvents {
 			if (event.entity instanceof EntityElephantSeal) {
 				((EntityElephantSeal)event.entity).printPos("***********controlSpawn callback: ");
 				if (! ((EntityElephantSeal)event.entity).getCanSpawnHere()) {
+					System.out.println("Enetity Elephant Seal Spawn Regected: (" + ((EntityElephantSeal)event.entity).posX + "," + ((EntityElephantSeal)event.entity).posY + "," + ((EntityElephantSeal)event.entity).posZ + ")");
 					event.setCanceled(true);
 				}
 			}
