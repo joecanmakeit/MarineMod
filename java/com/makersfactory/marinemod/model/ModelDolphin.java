@@ -80,9 +80,9 @@ public class ModelDolphin extends ModelBase
       head.setRotationPoint(-3F, 0F, -14F);
       head.setTextureSize(64, 32);
       head.mirror = true;
-      setRotation(head, 0F, -0.0743572F, -0.9666439F);
+      setRotation(head, 0F, 0F, 0F);
       nose = new ModelRenderer(this, 17, 16);
-      nose.addBox(-2F, -2F, -5F, 4, 4, 5);
+      nose.addBox(-5F, -2F, -19F, 4, 4, 5);
       nose.setRotationPoint(0F, 3F, -10F);
       nose.setTextureSize(64, 32);
       nose.mirror = true;

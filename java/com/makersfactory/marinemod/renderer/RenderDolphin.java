@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderDolphin extends RenderLiving {
 
-    private static final ResourceLocation dolphinTextures = new ResourceLocation("myassets:textures/entity/jellyfishtest.png");
+    private static final ResourceLocation dolphinTextures = new ResourceLocation("myassets:textures/entity/DolphinTexture.png");
     private ModelBase scaleAmount;
     //private static final String __OBFID = "CL_00001024";
 
