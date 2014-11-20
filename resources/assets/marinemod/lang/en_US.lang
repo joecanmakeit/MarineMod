@@ -3,3 +3,5 @@ entity.Gull.name=Seagull
 entity.Whale.name=Whale
 entity.Starfish.name=Starfish
 entity.ElephantSeal.name=ElephantSeal
+item.teleporterHome.name=Warp to Home World
+item.teleporterTest.name=Warp to Test World
