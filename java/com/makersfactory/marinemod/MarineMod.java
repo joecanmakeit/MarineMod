@@ -39,6 +39,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class MarineMod {
 	@Instance(value = "1")
 	public static MarineMod instance;
+	public static String modID = "MarineMod";
 	@SidedProxy(clientSide="com.makersfactory.marinemod.client.ClientProxy", serverSide="com.makersfactory.marinemod.CommonProxy")
 	public static CommonProxy proxy;
 
