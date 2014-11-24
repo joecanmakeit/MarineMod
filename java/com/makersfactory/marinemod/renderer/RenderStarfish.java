@@ -8,7 +8,7 @@ import com.makersfactory.marinemod.*;
 
 public class RenderStarfish extends RenderLiving {
 	
-	private static final ResourceLocation starfishTextures = new ResourceLocation("myassets:textures/original/pig/pig.png");
+	private static final ResourceLocation starfishTextures = new ResourceLocation("myassets:textures/entity/Starfish.png");
 
 	public RenderStarfish(ModelBase p_i1262_1_, float p_i1262_2_) {
 		super(p_i1262_1_, p_i1262_2_);

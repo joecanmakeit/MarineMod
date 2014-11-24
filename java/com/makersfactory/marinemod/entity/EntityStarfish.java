@@ -34,14 +34,8 @@ public class EntityStarfish extends EntityAnimal
         this.getNavigator().setAvoidsWater(false);
         this.tasks.addTask(0, new EntityAILookIdle(this));
         this.tasks.addTask(3, new EntityAIWander(this, 0.1D));
-        //this.tasks.addTask(6, new EntityAISwimming(this));
-        //this.tasks.addTask(1, new EntityAIPanic(this, 1.25D));
-        //this.tasks.addTask(2, this.aiControlledByPlayer = new EntityAIControlledByPlayer(this, 0.3F));
         //this.tasks.addTask(3, new EntityAIMate(this, 1.0D));
-        //this.tasks.addTask(4, new EntityAITempt(this, 1.2D, Items.carrot_on_a_stick, false));
-        //this.tasks.addTask(4, new EntityAITempt(this, 1.2D, Items.carrot, false));
         this.tasks.addTask(2, new EntityAIFollowParent(this, 1.1D));
-        //this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     }
 
     /**
