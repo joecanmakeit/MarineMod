@@ -40,7 +40,8 @@ public class MainForgeEvents {
 //		}
 //	}
 	
-	/** They are about to spawn the entity. Check to see if the posistion is valid first..
+	/** They are about to spawn the entity.
+	 * Check to see if the position is valid first and use this as a place to do anything else you need to before entity is spawned...
 	 * http://www.minecraftforge.net/wiki/Event_Reference#LivingSpawnEvent
 	 * http://www.minecraftforge.net/forum/index.php?topic=20376.0
 	 * @author Desmond **/
@@ -48,11 +49,18 @@ public class MainForgeEvents {
 	public void controlSpawn(EntityJoinWorldEvent event) {
 		if (!event.entity.worldObj.isRemote) {
 			if (event.entity instanceof EntityElephantSeal) {
-				((EntityElephantSeal)event.entity).printPos("***********controlSpawn callback: ");
-				if (! ((EntityElephantSeal)event.entity).getCanSpawnHere()) {
-					System.out.println("Enetity Elephant Seal Spawn Regected: (" + ((EntityElephantSeal)event.entity).posX + "," + ((EntityElephantSeal)event.entity).posY + "," + ((EntityElephantSeal)event.entity).posZ + ")");
-					event.setCanceled(true);
-				}
+				EntityElephantSeal tmp_entitiy = (EntityElephantSeal)event.entity;
+				tmp_entitiy.printPos("***********controlSpawn callback: "); // TODO REMOVE DEBUG
+				
+				if (tmp_entitiy.getCanSpawnHere() ) { // check to see if location is good for spawning
+					if (! tmp_entitiy.findAndSetNearbyBeach()) { // try to find a nearby spot in the sand
+						System.out.println("Couldn't find nearby sand.");
+						event.setCanceled(true); // cancel the spawn
+					}
+				} else {
+					tmp_entitiy.printPos("Enetity Elephant Seal Spawn Regected: ");
+					event.setCanceled(true); // cancel the spawn
+				}				
 			}
 		}
 	}

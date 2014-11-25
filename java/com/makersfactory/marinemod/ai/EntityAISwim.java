@@ -43,31 +43,28 @@ public class EntityAISwim extends EntityAIBase {
 
 	@Override
 	public void startExecuting() {
+		double tagetX, tagetY, tagetZ; // where to head towards
+		
 		// DEBUG
 		System.out.println("EntityAISwim startExecute()");
-		
-		/*startTime = (new Date()).getTime();
-		startX = theEntity.posX;
-		startY = theEntity.posY;
-		startZ = theEntity.posZ;*/
-		//int[] tmp = this.theEntity.posToBlockPos();
-		double tagetX, tagetY, tagetZ; // where to head towards
 		
 		if (!this.theEntity.getBiome().equals(BiomeGenBase.beach)) {
 			System.out.println("EntityAISwim: entity is not in the beach biome");
 			System.out.println("Current Biome: " + this.theEntity.getBiome());
 			System.out.println("Beach Biome: " + BiomeGenBase.beach);
-			System.out.println(this.theEntity.getBiome() == BiomeGenBase.beach);
 			// if you are out of the biome. move towards home (move 20% the distance from current position to spawn position).
 			tagetX = theEntity.nearByBeachX + ((theEntity.posX - theEntity.nearByBeachX) * .2);
 			tagetY = theEntity.nearByBeachY + ((theEntity.posY - theEntity.nearByBeachY) * .2);
 			tagetZ = theEntity.nearByBeachZ + ((theEntity.posZ - theEntity.nearByBeachZ) * .2);
 		} else {
-			tagetX = Math.random() * 40.0; // TODO is 40.0 good?
-			tagetY = Math.random() * 40.0; // TODO is 40.0 good?
-			tagetZ = Math.random() * 40.0; // TODO is 40.0 good?
+			tagetX = theEntity.posX + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
+			tagetY = theEntity.posY + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
+			tagetZ = theEntity.posZ + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
 		}
 		this.theEntity.getNavigator().tryMoveToXYZ(tagetX, tagetY, tagetZ, theEntity.swimSpeed);
+		
+		//DEBUG
+		System.out.println("EntityAISwim startExecute(): noPath??  " + this.theEntity.getNavigator().noPath());
 	}
 
 	@Override
