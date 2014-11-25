@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.makersfactory.dimensions.WorldProviderTest;
 import com.makersfactory.marinemod.entity.EntityElephantSeal;
 
 import net.minecraft.block.Block;
@@ -18,6 +19,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -37,11 +39,19 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class MarineMod {
 	@Instance(value = "1")
 	public static MarineMod instance;
+	public static String modID = "MarineMod";
 	@SidedProxy(clientSide="com.makersfactory.marinemod.client.ClientProxy", serverSide="com.makersfactory.marinemod.CommonProxy")
 	public static CommonProxy proxy;
+	public static CreativeTabs tabMyMod = new CreativeTabsMyMod("MarineMod");
+
+	// DIMENSION STUFF
+	public static int testDimensionId = 5;
 	
 	// NEW FIELDS GO HERE
 	public static Item myItem = new Item();
+	public static ItemTeleporter teleporterTest = new ItemTeleporter("teleporterTest", testDimensionId);
+	public static ItemTeleporter teleporterHome = new ItemTeleporter("teleporterHome", 0);
+	
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -53,6 +63,10 @@ public class MarineMod {
 		// Register mobs
 		int entityID = 0;
 		MyMobSetup.mainRegistry(this);
+
+		// Register dimensions
+		DimensionManager.registerProviderType(testDimensionId, WorldProviderTest.class, false);
+		DimensionManager.registerDimension(testDimensionId, testDimensionId);
 	}
 
 	@EventHandler
@@ -64,11 +78,13 @@ public class MarineMod {
 		myItem.setTextureName("myassets:textures/items/myItem.png");
 		myItem.setUnlocalizedName("myItem");
 		GameRegistry.registerItem(myItem, "myItem");
-	}
+		
+		GameRegistry.registerItem(teleporterTest, "teleporterTest");
+		GameRegistry.registerItem(teleporterHome, "teleporterHome");
+    }
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 
 	}
-	
 }

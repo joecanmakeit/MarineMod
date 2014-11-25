@@ -4,19 +4,19 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import com.makersfactory.marinemod.*;
 
-public class RenderStarfish extends RenderLiving {
+public class RenderShark extends RenderLiving {
+
+	private static final ResourceLocation sharkTextures = new ResourceLocation("textures/entity/pig/pig.png");
 	
-	private static final ResourceLocation starfishTextures = new ResourceLocation("myassets:textures/entity/Starfish.png");
-
-	public RenderStarfish(ModelBase p_i1262_1_, float p_i1262_2_) {
+	public RenderShark(ModelBase p_i1262_1_, float p_i1262_2_) {
 		super(p_i1262_1_, p_i1262_2_);
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
-		return starfishTextures;
+		return sharkTextures;
 	}
 
 }

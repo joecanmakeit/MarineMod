@@ -1,5 +1,13 @@
 entity.Jellyfish.name=Jellyfish
-entity.Gull.name=Seagull
+entity.Gull.name=Seagull by Joe
+entity.Seagull.name=Seagull by Brian
+entity.Dolphin.name=Dolphin
 entity.Whale.name=Whale
 entity.Starfish.name=Starfish
-entity.ElephantSeal.name=ElephantSeal
+entity.ElephantSeal.name=Elephant Seal
+entity.Shark.name=Shark
+
+item.teleporterHome.name=Warp to Home World
+item.teleporterTest.name=Warp to Test World
+
+itemGroup.MarineMod=Marine Mod
