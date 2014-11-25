@@ -5,6 +5,7 @@ import com.makersfactory.marinemod.entity.EntityElephantSeal;
 import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
 import com.makersfactory.marinemod.entity.EntitySeagull;
+import com.makersfactory.marinemod.entity.EntityShark;
 import com.makersfactory.marinemod.entity.EntityStarfish;
 import com.makersfactory.marinemod.entity.EntityWhale;
 
@@ -42,7 +43,11 @@ public class MyMobSetup {
 		
 		// Dolphin Entity
 		registerNewEntity(mod, EntityDolphin.class, "Dolphin", 0xE7E6DD, 0xF4B400);
-		registerNewSpawnBiome(EntityStarfish.class, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.beach, BiomeGenBase.ocean);
+		registerNewSpawnBiome(EntityStarfish.class, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.ocean);
+		
+		// Shark Entity
+		registerNewEntity(mod, EntityShark.class, "Shark", 0xE7E6DD, 0xF4B400);
+		registerNewSpawnBiome(EntityShark.class, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.ocean);
 	}
 	
 	// Register entity, create new egg for it.
