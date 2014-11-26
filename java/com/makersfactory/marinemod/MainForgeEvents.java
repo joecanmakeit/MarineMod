@@ -26,19 +26,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class MainForgeEvents {
 	
-//	/** Set the entity's position when it is spawned. Learned about from here...
-//	 * http://www.minecraftforge.net/wiki/Event_Reference#LivingSpawnEvent
-//	 * http://www.minecraftforge.net/forum/index.php?topic=20376.0
-//	 * @author Desmond **/
-//	@SubscribeEvent
-//	public void onBirth(LivingSpawnEvent event) {
-//		if (!event.entity.worldObj.isRemote) {
-//			if (event.entity instanceof EntityElephantSeal) {
-//				((EntityElephantSeal)event.entity).printPos("***********birth callback: ");
-//			}
-//		}
-//	}
-	
 	/** They are about to spawn the entity.
 	 * Check to see if the position is valid first and use this as a place to do anything else you need to before entity is spawned...
 	 * http://www.minecraftforge.net/wiki/Event_Reference#LivingSpawnEvent
