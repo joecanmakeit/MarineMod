@@ -22,6 +22,9 @@ public class EntityAISwim extends EntityAIBase {
 	private double startY;
 	private double startZ;
 	private long startTime; */
+	private double lastBeachBiomeX;
+	private double lastBeachBiomeY;
+	private double lastBeachBiomeZ;
 	
 	public EntityAISwim(EntityElephantSeal entity) {
 		theEntity = entity;
@@ -43,7 +46,8 @@ public class EntityAISwim extends EntityAIBase {
 
 	@Override
 	public void startExecuting() {
-		double tagetX, tagetY, tagetZ; // where to head towards
+		double targetX, targetY, targetZ; // where to head towards
+		boolean found_path = false; // could we find a path to swim to?
 		
 		// DEBUG
 		System.out.println("EntityAISwim startExecute()");
@@ -53,23 +57,32 @@ public class EntityAISwim extends EntityAIBase {
 			System.out.println("Current Biome: " + this.theEntity.getBiome());
 			System.out.println("Beach Biome: " + BiomeGenBase.beach);
 			// if you are out of the biome. move towards home (move 20% the distance from current position to spawn position).
-			tagetX = theEntity.nearByBeachX + ((theEntity.posX - theEntity.nearByBeachX) * .2);
-			tagetY = theEntity.nearByBeachY + ((theEntity.posY - theEntity.nearByBeachY) * .2);
-			tagetZ = theEntity.nearByBeachZ + ((theEntity.posZ - theEntity.nearByBeachZ) * .2);
+			for (int try_cnt=1; try_cnt <= 5 && !found_path; ++try_cnt) {
+				targetX = theEntity.nearByBeachX + ((theEntity.posX - theEntity.nearByBeachX) * .2) + ((Math.random() * 10.0) - 5.0);
+				targetY = theEntity.nearByBeachY + ((theEntity.posY - theEntity.nearByBeachY) * .2) + ((Math.random() * 10.0) - 5.0);
+				targetZ = theEntity.nearByBeachZ + ((theEntity.posZ - theEntity.nearByBeachZ) * .2)+ ((Math.random() * 10.0) - 5.0);
+				this.theEntity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, theEntity.swimSpeed);
+				found_path = ! (this.theEntity.getNavigator().noPath());
+				// DEBUG
+				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ +")?? try" + try_cnt + ": " + !found_path);
+			}
 		} else {
-			tagetX = theEntity.posX + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
-			tagetY = theEntity.posY + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
-			tagetZ = theEntity.posZ + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
+			for (int try_cnt=1; try_cnt <= 5 && !found_path; ++try_cnt) {
+				targetX = theEntity.posX + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
+				targetY = theEntity.posY + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
+				targetZ = theEntity.posZ + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
+				this.theEntity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, theEntity.swimSpeed);
+				found_path = ! (this.theEntity.getNavigator().noPath());
+				// DEBUG
+				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ +")?? try" + try_cnt + ": " + !found_path);
+			}
 		}
-		this.theEntity.getNavigator().tryMoveToXYZ(tagetX, tagetY, tagetZ, theEntity.swimSpeed);
-		
-		//DEBUG
-		System.out.println("EntityAISwim startExecute(): noPath??  " + this.theEntity.getNavigator().noPath());
 	}
 
 	@Override
 	public boolean continueExecuting() {
 		boolean continueExecuting = !this.theEntity.getNavigator().noPath();
+		// TODO maybe add some code that will chek if you actually made progress?
 		// DEBUG
 		System.out.println("EntityAISwim continueExecuting ="
 				+ continueExecuting);

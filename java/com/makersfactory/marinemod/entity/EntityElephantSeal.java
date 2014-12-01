@@ -187,7 +187,7 @@ public class EntityElephantSeal extends EntityWaterMob
        //good to have instances of AI so task list can be modified, including in subclasses
        //aiWander = new EntityAIWander(this, 1.0D);
        //aiHeadToBeach = new EntityAIHeadToBeach(this);
-      // aiMySwim = new EntityAISwim(this);
+       aiMySwim = new EntityAISwim(this);
       
        /*protected EntityAIBase aiSwimming = new EntityAISwimming(this);
        protected EntityAIBase aiLeapAtTarget = new EntityAILeapAtTarget(this, 0.4F);
