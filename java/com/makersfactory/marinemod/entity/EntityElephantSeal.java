@@ -77,7 +77,7 @@ public class EntityElephantSeal extends EntityWaterMob
 	{
 		super(p_i1695_1_);
 		System.out.println("EntityElephantSeal: Ctor");
-		this.setSize(1.0F, 0.5F, 2.0F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
+		this.setSize(1.0F, 2.5F, 3.0F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
 		//this.getBoundingBox().offset(p_72317_1_, p_72317_3_, p_72317_5_)
 		this.scientificName = "Mirounga Angustrirostris";
 		this.isImmuneToFire = true;
@@ -104,6 +104,56 @@ public class EntityElephantSeal extends EntityWaterMob
 		//System.out.println("water checks: " + tmpwaterbool1 +" " + tmpwaterbool2 + " " + tmpwaterbool3 + " " + tmpwaterbool4);
 	}
 
+	// TODO confirm this is correct: (entity is on sand and there is air directly above) or (entity is in air and their is sand directly below)?
+	/** does not check if biome is beach... **/
+	public boolean isPosTopBeachSand (int xCord, int yCord, int zCord) {
+		return (this.worldObj.getBlock(xCord,yCord-1,zCord) == Blocks.sand &&
+			   this.worldObj.getBlock(xCord,yCord,zCord) == Blocks.air);
+	}
+	
+	/** returns null if no close by surface beach sand was found that is reachable from entities current position**/
+	public int[] findSandNear(int byX, int byY, int byZ, int numXToCheck, int numYToCheck, int numZToCheck) {
+		int[] coords = null;
+		
+		boolean not_found = true;
+		/* for 300, 300by300 xz planes try to find a spawn point 
+		 * (start with where you currently are) */
+		for (int i_y = 0; i_y < numYToCheck && not_found; ++i_y) {
+			for (int i_z = 0; i_z < numZToCheck && not_found; ++i_z) {
+				for (int i_x = 0; i_x < numXToCheck && not_found; ++i_x) {
+					
+					// try adding and subtracting the z,y,x vals
+					for (int tmp_y : new int[]{i_y, -i_y}) {
+						for (int tmp_z : new int[]{i_z, -i_z}) {
+							for (int tmp_x : new int[]{i_x, -i_x}) {
+								// if a block is sand and above it is air then we can spawn there (on the air block)
+								if (not_found && this.isPosTopBeachSand(byX+tmp_x,byY+tmp_y,byZ+tmp_z))
+								{
+									boolean prev_onGround = this.onGround;
+									this.onGround = true;
+									PathEntity possiblePath = this.getNavigator().getPathToXYZ(byX+tmp_x,byY+tmp_y+1,byZ+tmp_z);
+									if (possiblePath != null) {
+										if (!possiblePath.isFinished()) {
+											coords = new int[3];
+											coords[0] = byX+tmp_x;
+											coords[1] = byY+tmp_y+1;
+											coords[2] = byZ+tmp_z;
+											not_found = false;
+										}
+									}
+									this.onGround = prev_onGround;
+								}
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		
+		return coords;
+	}
+	
 	protected void setSize(float new_x, float new_y, float new_z) {
         super.setSize(new_x, new_y);
         this.boundingBox.maxZ = this.boundingBox.minZ + (double)new_z;
@@ -137,7 +187,7 @@ public class EntityElephantSeal extends EntityWaterMob
        //good to have instances of AI so task list can be modified, including in subclasses
        //aiWander = new EntityAIWander(this, 1.0D);
        //aiHeadToBeach = new EntityAIHeadToBeach(this);
-      // aiMySwim = new EntityAISwim(this);
+       aiMySwim = new EntityAISwim(this);
       
        /*protected EntityAIBase aiSwimming = new EntityAISwimming(this);
        protected EntityAIBase aiLeapAtTarget = new EntityAILeapAtTarget(this, 0.4F);
@@ -178,7 +228,7 @@ public class EntityElephantSeal extends EntityWaterMob
        tasks.addTask(10, new EntityAILookIdle(this));
        targetTasks.addTask(0, new EntityAIHurtByTargetHerdAnimal(this, true)); */
        
-      // tasks.addTask(1, aiMySwim);
+       tasks.addTask(1, aiMySwim);
        // tasks.addTask(1, aiWander);
       // tasks.addTask(8, aiHeadToBeach);
     }
@@ -237,74 +287,34 @@ public class EntityElephantSeal extends EntityWaterMob
 
 	/**
 	 * Checks if the entity's current position is a valid location to spawn this
-	 * entity: must be in beach biome & super's method must be true. Also you should be
-	 * able to find above water sand close to the spawn point that is reachable by the entity. 
+	 * entity: must be in beach biome & super's method must be true. 
 	 */
 	public boolean getCanSpawnHere()
 	{
 		if (!super.getCanSpawnHere()) return false;
 		if (!this.isInBeachBiome()) return false;
-return true; // TODO remove
-//		int nullPathCount = 0;
-//		int endPathCount = 0;
-//		boolean not_found = true;
-//		
-//		System.out.println("ori: " + ((int)this.posX) + " " + ((int)this.posY) + " " + ((int)this.posZ));
-//		
-//		/* for 300, 300by300 xz planes try to find a spawn point 
-//		 * (start with where you currently are) */
-//		for (int i_y = 0; i_y < 40 && not_found; ++i_y) {
-//			for (int i_z = 0; i_z < 50 && not_found; ++i_z) {
-//				for (int i_x = 0; i_x < 50 && not_found; ++i_x) {
-//					
-//					// try adding and subtracting the z,y,x vals
-//					for (int tmp_y : new int[]{i_y, -i_y}) {
-//						for (int tmp_z : new int[]{i_z, -i_z}) {
-//							for (int tmp_x : new int[]{i_x, -i_x}) {
-//								// if a block is sand and above it is air then we can spawn there (on the air block)
-//								if (not_found && 
-//									this.worldObj.getBlock((int)this.posX+tmp_x,(int)this.posY+tmp_y,(int)this.posZ+tmp_z) == Blocks.sand &&
-//									this.worldObj.getBlock((int)this.posX+tmp_x,(int)this.posY+tmp_y+1,(int)this.posZ+tmp_z) == Blocks.air)
-//								{
-//									boolean prev_onGround = this.onGround;
-//									this.onGround = true;
-//									PathEntity possiblePath = this.getNavigator().getPathToXYZ((int)this.posX+tmp_x,(int)this.posY+tmp_y+1,(int)this.posZ+tmp_z);
-//									if (possiblePath != null) {
-//										if (!possiblePath.isFinished()) {
-//											this.nearByBeachX = (int)this.posX+tmp_x;
-//											this.nearByBeachY = (int)this.posY+tmp_y+1;
-//											this.nearByBeachZ = (int)this.posZ+tmp_z;
-//											not_found = false;
-//										} else {
-//											//System.out.println("found sand but you can't reach it: path was at end");
-//											endPathCount++;
-//										}
-//									} else {
-//										//System.out.println("found sand but you can't reach it: path was null");
-//										nullPathCount++;
-//									}
-//									this.onGround = prev_onGround;
-//								}
-//							}
-//						}
-//					}
-//					
-//				}
-//			}
-//		}
-//		
-//		if (not_found) {
-//			System.out.println("EntityElephantSeal: Couldn't find a beach");
-//			System.out.println("found sand but you can't reach it: path was null " + nullPathCount + " times");
-//			System.out.println("found sand but you can't reach it: path was at end " + endPathCount + " times");
-//			if (aiHeadToBeach != null) {
-//				tasks.removeTask(aiHeadToBeach);
-//			}
-//		} else {
-//			System.out.println("EntityElephantSeal: Found a beach");
-//		}
-//	
-//		return !not_found;
+		return true;
+	}
+	
+	/** @return true if found and set a nearby beach
+	 ** @return false if failed to find and set a nearby beach 
+	 */
+	public boolean findAndSetNearbyBeach () {
+		int[] tmp_coords = this.findSandNear((int)this.posX,(int)this.posY,(int)this.posZ, 20, 10, 20);
+		
+		if (tmp_coords == null) {
+			System.out.println("EntityElephantSeal: Couldn't find a beach");
+			if (aiHeadToBeach != null) {
+				tasks.removeTask(aiHeadToBeach);
+			}
+			return false;
+		} else {
+			System.out.println("EntityElephantSeal: Found a beach");
+			this.nearByBeachX = tmp_coords[0];
+			this.nearByBeachY = tmp_coords[1];
+			this.nearByBeachZ = tmp_coords[2];
+			return true;
+		}
 	}
 
 	public boolean isInBeachBiome()
@@ -315,20 +325,33 @@ return true; // TODO remove
 	/** true if on the sand and in a beach biome **/
 	public boolean isOnBeach()
 	{
-		return ((!this.isInWater()) && this.isInBeachBiome()); // TODO fix so it check explicitly that you are on sand
+		if (this.isInWater()) {
+			return false; 
+		}
+		
+		if (!this.isInBeachBiome()) {
+			return false;
+		}
+		
+		if (!this.isPosTopBeachSand((int)this.posX,(int)this.posY,(int)this.posZ)) {
+			return false;
+		}
+		
+		return true;
 	}
-	
+/*	
 	public void setOnBeach()
 	{
 		lastTimeEnteredBeach = (new Date()).getTime();
 	}
-
+*/
 	/** Occasionally beach: "The northern elephant seals are nocturnal deep feeders famous for the long time intervals they remain under water." - http://en.wikipedia.org/wiki/Northern_elephant_seal
 	 * 	  if it is currently not beached...
 	 * 	    and it has been at least 6 minutes since the last time beaching: beach 10% likely
 	 * 		and it has been at least 9 minutes since the last time beaching: beach 15% likely
 	 *		and it has been at least 12 minutes since the last time beaching: beach 20% likely
-	 * @return
+	 * @return false if already on beach
+	 * @return true if TODO
 	 */
 	public boolean wantsToBeach()
 	{

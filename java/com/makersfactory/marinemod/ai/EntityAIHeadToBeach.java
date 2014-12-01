@@ -5,6 +5,7 @@ import com.makersfactory.marinemod.entity.EntityElephantSeal;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary; //Alternatively: import net.minecraftforge.common.*;
@@ -41,19 +42,27 @@ public class EntityAIHeadToBeach extends EntityAIBase {
 	public void startExecuting() {
 		// DEBUG
 		System.out.println("EntityAIHeadToBeach startExecute()");
-		// Find path to the spawn beach
-		this.theEntity.getNavigator().tryMoveToXYZ(theEntity.nearByBeachX, theEntity.nearByBeachY, theEntity.nearByBeachZ, theEntity.swimSpeed);
-		//BiomeGenBase.getBiomeGenArray();
-		//BiomeGenBase[] biomes = BiomeDictionary.getBiomesForType(Type.BEACH);	
-		//this.entityObj.worldObj.villageCollectionObj.findNearestVillage(i, j, k, 14);
+		// Check that you can still get to the found sand
+		PathEntity tmp = this.theEntity.getNavigator().getPathToXYZ(theEntity.nearByBeachX, theEntity.nearByBeachY, theEntity.nearByBeachZ);
+		if (tmp == null || tmp.isFinished()) {
+			System.out.println("Path to beach spot is no longer valid");
+			int[] tmp_coords = this.theEntity.findSandNear((int)theEntity.nearByBeachX, (int)theEntity.nearByBeachY, (int)theEntity.nearByBeachZ, 10, 10, 10);
+			tmp = this.theEntity.getNavigator().getPathToXYZ(tmp_coords[0],tmp_coords[1],tmp_coords[2]);
+			if (tmp == null || tmp.isFinished()) {
+				System.out.println("Failed to find new path");
+				this.theEntity.getNavigator().clearPathEntity(); // so it will stop executing
+			} else {
+				// Go to the marked beach point
+				this.theEntity.getNavigator().tryMoveToXYZ(theEntity.nearByBeachX, theEntity.nearByBeachY, theEntity.nearByBeachZ, theEntity.swimSpeed);
+			}
+		} else {
+			// Go to the marked beach point
+			this.theEntity.getNavigator().tryMoveToXYZ(theEntity.nearByBeachX, theEntity.nearByBeachY, theEntity.nearByBeachZ, theEntity.swimSpeed);
+		}		
 	}
 
 	@Override
 	public boolean continueExecuting() {
-//		boolean continueExecuting = theEntity.isOnBeach();
-//		if (!continueExecuting) {
-//			theEntity.setSwimming(false);
-//		}
 		boolean continueExecuting = !this.theEntity.getNavigator().noPath();//theEntity.isInWater();
 		// DEBUG
 		System.out.println("EntityAIHeadToBeach continueExecuting ="

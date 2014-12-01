@@ -42,6 +42,7 @@ public class MarineMod {
 	public static String modID = "MarineMod";
 	@SidedProxy(clientSide="com.makersfactory.marinemod.client.ClientProxy", serverSide="com.makersfactory.marinemod.CommonProxy")
 	public static CommonProxy proxy;
+	public static CreativeTabs tabMyMod = new CreativeTabsMyMod("MarineMod");
 
 	// DIMENSION STUFF
 	public static int testDimensionId = 5;
@@ -80,11 +81,10 @@ public class MarineMod {
 		
 		GameRegistry.registerItem(teleporterTest, "teleporterTest");
 		GameRegistry.registerItem(teleporterHome, "teleporterHome");
-}
+    }
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 
 	}
-	
 }
