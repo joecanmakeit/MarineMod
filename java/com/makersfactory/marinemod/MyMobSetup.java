@@ -6,6 +6,7 @@ import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
 import com.makersfactory.marinemod.entity.EntitySeagull;
 import com.makersfactory.marinemod.entity.EntityShark;
+import com.makersfactory.marinemod.entity.EntityFish;
 import com.makersfactory.marinemod.entity.EntityStarfish;
 import com.makersfactory.marinemod.entity.EntityWhale;
 
