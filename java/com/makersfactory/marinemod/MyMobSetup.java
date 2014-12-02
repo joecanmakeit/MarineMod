@@ -6,6 +6,7 @@ import com.makersfactory.marinemod.entity.EntityGull;
 import com.makersfactory.marinemod.entity.EntityJellyfish;
 import com.makersfactory.marinemod.entity.EntitySeagull;
 import com.makersfactory.marinemod.entity.EntityShark;
+import com.makersfactory.marinemod.entity.EntityFish;
 import com.makersfactory.marinemod.entity.EntityStarfish;
 import com.makersfactory.marinemod.entity.EntityWhale;
 
@@ -41,6 +42,9 @@ public class MyMobSetup {
 		registerNewEntity(mod, EntitySeagull.class, "Seagull", 0xE7E6DD, 0xF4B400);
 		registerNewSpawnBiome(EntityStarfish.class, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.beach);
 		
+		//Fish Entity
+		registerNewEntity(mod, EntityFish.class, "Fish", 0xE7E6DD, 0xF4B400);
+		registerNewSpawnBiome(EntityFish.class, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.beach);
 		// Dolphin Entity
 		registerNewEntity(mod, EntityDolphin.class, "Dolphin", 0xE7E6DD, 0xF4B400);
 		registerNewSpawnBiome(EntityStarfish.class, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.ocean);
