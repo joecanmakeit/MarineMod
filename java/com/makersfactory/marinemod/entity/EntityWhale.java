@@ -48,6 +48,7 @@ public class EntityWhale extends EntityWaterMob {
 		this.setSize(4.0F,4.0F);
 		this.swimSpeed = 0.5D;
 		this.tasks.addTask(0, new EntityAISubmerge(this));
+		
 	}
     
     public void onUpdate()
