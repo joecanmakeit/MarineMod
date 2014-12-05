@@ -2,7 +2,11 @@ package com.makersfactory.marinemod.entity;
 
 import java.util.Random;
 
+import com.makersfactory.marinemod.ai.EntityAIDive;
+import com.makersfactory.marinemod.ai.EntityAISubmerge;
+import com.makersfactory.marinemod.ai.EntityAISwim;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
@@ -36,20 +40,14 @@ import net.minecraftforge.common.ForgeModContainer;
 public class EntityWhale extends EntityWaterMob {
 	
 	Random random = new Random();
+	public double swimSpeed;
 	
 	public EntityWhale(World par1World) {
 		super(par1World);
 		this.isImmuneToFire = true;
-		
-		this.tasks.addTask(3, new EntityAISwimming(this));
-		this.tasks.addTask(2, new EntityAIPanic(this, 1.4D));
-		//this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
-		this.tasks.addTask(4, new EntityAITempt(this, 1.0D, Items.fish, false));
-		//this.tasks.addTask(4, new EntityAIFollowParent(this, 1.1D));
-		this.tasks.addTask(0, new EntityAIWander(this, 1.0D));
-        this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-        this.tasks.addTask(1, new EntityAILookIdle(this));
-        
+		this.setSize(4.0F,4.0F);
+		this.swimSpeed = 0.5D;
+		this.tasks.addTask(0, new EntityAISubmerge(this));
 	}
     
     public void onUpdate()
@@ -67,6 +65,17 @@ public class EntityWhale extends EntityWaterMob {
     	return false;
     }
     
+    public boolean isInWater()
+    {
+        return worldObj.handleMaterialAcceleration(boundingBox.expand(0.0D, -0.60000002384185791D, 0.0D), Material.water, this);
+    }
+    
+    public void onLivingUpdate() {
+    	super.onLivingUpdate();
+    	if(isInWater()) {
+    		//randomMotionSpeed = 2.0F;
+    	}
+    }
     
     protected void applyEntityAttributes()
     {
@@ -87,13 +96,13 @@ public class EntityWhale extends EntityWaterMob {
      // Returns the sound this mob makes when it is hurt.
     protected String getHurtSound()
     {
-        return "mob.pig.say";
+        return "";
     }
 
      //Returns the sound this mob makes on death.
     protected String getDeathSound()
     {
-        return "mob.pig.death";
+        return "";
     }
 	
 	
