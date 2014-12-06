@@ -9,10 +9,11 @@ import net.minecraft.world.biome.BiomeGenBase;
 public class EntityAIDive extends EntityAIBase {
 	
 	EntityDolphin dolphin;
+	int timer;
 	
 	public EntityAIDive(EntityDolphin entity) {
 		dolphin = entity;
-		
+		timer = 0;
 		setMutexBits(3); //If you want to make it compatible with swimming, but not begging and watching closest you should set mutexBits to 3.
 		// DEBUG
 		System.out.println("EntityAIDive constructor()");
@@ -37,55 +38,54 @@ public class EntityAIDive extends EntityAIBase {
 
 		//Taken from Entity AI Swim
 
-//		Dolphin should always be in the water so we don't need to check
-//		if (!this.dolphin.getBiome().equals(BiomeGenBase.beach)) {
-//			System.out.println("EntityAISwim: entity is not in the beach biome");
-//			System.out.println("Current Biome: " + this.dolphin.getBiome());
-//			System.out.println("Beach Biome: " + BiomeGenBase.beach);
-//			// if you are out of the biome. move towards home (move 20% the distance from current position to spawn position).
-//			for (int try_cnt=1; try_cnt <= 5 && !found_path; ++try_cnt) {
-//				targetX = dolphin.nearByBeachX + ((dolphin.posX - dolphin.nearByBeachX) * .2) + ((Math.random() * 10.0) - 5.0);
-//				targetY = dolphin.nearByBeachY + ((dolphin.posY - dolphin.nearByBeachY) * .2) + ((Math.random() * 10.0) - 5.0);
-//				targetZ = dolphin.nearByBeachZ + ((dolphin.posZ - dolphin.nearByBeachZ) * .2)+ ((Math.random() * 10.0) - 5.0);
-//				this.dolphin.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, dolphin.swimSpeed);
-//				found_path = ! (this.dolphin.getNavigator().noPath());
-//				// DEBUG
-//				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ +")?? try" + try_cnt + ": " + !found_path);
-//			}
-//		} else {
-			for (int try_cnt=1; try_cnt <= 5 && !found_path; ++try_cnt) {
-				targetX = dolphin.posX + ((Math.random() * 2.0) - 1.0); // TODO is [-2.0, 2.0) good?
-				targetY = dolphin.posY + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
-				targetZ = dolphin.posZ + ((Math.random() * 2.0) - 1.0); // TODO is [-2.0, 2.0) good?
+			while(!found_path) 
+			{
+				targetX = dolphin.posX + ((Math.random() * 30.0) - 15.0); // TODO is [-2.0, 2.0) good?
+				targetY = dolphin.posY - (Math.random() * 20.0) + 30; // TODO is [30, 50) good?
+				targetZ = dolphin.posZ + ((Math.random() * 30.0) - 15.0); // TODO is [-2.0, 2.0) good?
 				this.dolphin.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, dolphin.swimSpeed);
-				found_path = ! (this.dolphin.getNavigator().noPath());
+				found_path = !(this.dolphin.getNavigator().noPath());
 				// DEBUG
-				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ +")?? try" + try_cnt + ": " + !found_path);
+				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ + ")" + "found_path:" + found_path);
 			}
 		}
 	
 	public boolean continueExecuting(){
-		boolean pathExists = !this.dolphin.getNavigator().noPath();
-		
-		//once the dolphin dives down, have it resurface to the top.
-		if(!pathExists)
+		//after five seconds of diving, start climbing to the top. Once we get to sea level, stop executing.
+		//this is called every tick and there are 20 ticks/second. 100 ticks == 5 seconds
+		++timer;
+		if(timer == 100)
 		{
+			//timer = 0;
+			
 			double targetX, targetY, targetZ; // where to head towards
 			boolean found_path = false; // could we find a path to swim to?
 			
-			for (int try_cnt=1; try_cnt <= 5 && !found_path; ++try_cnt) {
-				targetX = dolphin.posX + ((Math.random() * 2.0) - 1.0); // TODO is [-2.0, 2.0) good?
-				targetY = 63; //sea level is 64 http://minecraft.gamepedia.com/Coordinates
-				targetZ = dolphin.posZ + ((Math.random() * 2.0) - 1.0); // TODO is [-2.0, 2.0) good?
+			while(!found_path) 
+			{
+				targetX = dolphin.posX + ((Math.random() * 30.0) - 15.0); // TODO is [-2.0, 2.0) good?
+				targetY = 61; // TODO is [0, 20.0) good?
+				targetZ = dolphin.posZ + ((Math.random() * 30.0) - 15.0); // TODO is [-2.0, 2.0) good?
 				this.dolphin.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, dolphin.swimSpeed);
-				found_path = ! (this.dolphin.getNavigator().noPath());
+				found_path = !(this.dolphin.getNavigator().noPath());
 				// DEBUG
-				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ +")?? try" + try_cnt + ": " + !found_path);
+				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ + ")" + "found_path:" + found_path);
 			}
 		}
 		
-		System.out.println("EntityAISwim pathExists =" + pathExists); // DEBUG 
-		return (pathExists);
+		//are we at sea level?
+		double y = this.dolphin.posY;
+		System.out.println("dolphin.posY == " + y);
+		if(y==60)
+		{
+			System.out.println("stop executing");
+			return false;
+		}
+		else
+		{
+			System.out.println("continue executing");
+			return true;
+		}
 	}
 	
 }
