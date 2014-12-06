@@ -54,9 +54,9 @@ public class EntityAIDive extends EntityAIBase {
 //			}
 //		} else {
 			for (int try_cnt=1; try_cnt <= 5 && !found_path; ++try_cnt) {
-				targetX = dolphin.posX + ((Math.random() * 10.0) - 5.0); // TODO is [-5.0, 5.0) good?
-				targetY = dolphin.posY + ((Math.random() * 10.0) - 5.0); // TODO is [-5.0, 5.0) good?
-				targetZ = dolphin.posZ + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
+				targetX = dolphin.posX + ((Math.random() * 2.0) - 1.0); // TODO is [-2.0, 2.0) good?
+				targetY = dolphin.posY + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
+				targetZ = dolphin.posZ + ((Math.random() * 2.0) - 1.0); // TODO is [-2.0, 2.0) good?
 				this.dolphin.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, dolphin.swimSpeed);
 				found_path = ! (this.dolphin.getNavigator().noPath());
 				// DEBUG
@@ -64,5 +64,28 @@ public class EntityAIDive extends EntityAIBase {
 			}
 		}
 	
-
+	public boolean continueExecuting(){
+		boolean pathExists = !this.dolphin.getNavigator().noPath();
+		
+		//once the dolphin dives down, have it resurface to the top.
+		if(!pathExists)
+		{
+			double targetX, targetY, targetZ; // where to head towards
+			boolean found_path = false; // could we find a path to swim to?
+			
+			for (int try_cnt=1; try_cnt <= 5 && !found_path; ++try_cnt) {
+				targetX = dolphin.posX + ((Math.random() * 2.0) - 1.0); // TODO is [-2.0, 2.0) good?
+				targetY = 63; //sea level is 64 http://minecraft.gamepedia.com/Coordinates
+				targetZ = dolphin.posZ + ((Math.random() * 2.0) - 1.0); // TODO is [-2.0, 2.0) good?
+				this.dolphin.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, dolphin.swimSpeed);
+				found_path = ! (this.dolphin.getNavigator().noPath());
+				// DEBUG
+				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ +")?? try" + try_cnt + ": " + !found_path);
+			}
+		}
+		
+		System.out.println("EntityAISwim pathExists =" + pathExists); // DEBUG 
+		return (pathExists);
+	}
+	
 }
