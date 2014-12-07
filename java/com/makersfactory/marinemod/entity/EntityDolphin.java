@@ -1,19 +1,10 @@
 package com.makersfactory.marinemod.entity;
 
 import com.makersfactory.marinemod.ai.EntityAIDive;
+import com.makersfactory.marinemod.ai.EntityAISurface;
 
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIFollowParent;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMate;
-import net.minecraft.entity.ai.EntityAIPanic;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITempt;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityWaterMob;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.world.World;
 
 public class EntityDolphin extends EntityWaterMob {
@@ -27,6 +18,7 @@ public class EntityDolphin extends EntityWaterMob {
 		this.swimSpeed = 1.0D;
 		
 		this.tasks.addTask(0, new EntityAIDive(this));
+		this.tasks.addTask(1, new EntityAISurface(this));
 //		this.tasks.addTask(0, new EntityAISwimming(this));
 //		this.tasks.addTask(1, new EntityAIPanic(this, 1.4D));
 //		this.tasks.addTask(2,  new EntityAITempt(this, 1.0D, Items.fish, false));

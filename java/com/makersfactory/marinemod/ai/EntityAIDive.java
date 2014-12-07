@@ -38,54 +38,32 @@ public class EntityAIDive extends EntityAIBase {
 
 		//Taken from Entity AI Swim
 
-			while(!found_path) 
-			{
+		for (int try_cnt=1; try_cnt <= 5 && !found_path; ++try_cnt) {
 				targetX = dolphin.posX + ((Math.random() * 30.0) - 15.0); // TODO is [-2.0, 2.0) good?
 				targetY = dolphin.posY - (Math.random() * 20.0) + 30; // TODO is [30, 50) good?
 				targetZ = dolphin.posZ + ((Math.random() * 30.0) - 15.0); // TODO is [-2.0, 2.0) good?
 				this.dolphin.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, dolphin.swimSpeed);
 				found_path = !(this.dolphin.getNavigator().noPath());
 				// DEBUG
-				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ + ")" + "found_path:" + found_path);
+				System.out.println("EntityAIDive startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ + ")" + "found_path:" + found_path);
 			}
 		}
 	
 	public boolean continueExecuting(){
-		//after five seconds of diving, start climbing to the top. Once we get to sea level, stop executing.
+		//after five seconds of diving, stop executing.
 		//this is called every tick and there are 20 ticks/second. 100 ticks == 5 seconds
 		++timer;
 		if(timer == 100)
 		{
-			//timer = 0;
-			
-			double targetX, targetY, targetZ; // where to head towards
-			boolean found_path = false; // could we find a path to swim to?
-			
-			while(!found_path) 
-			{
-				targetX = dolphin.posX + ((Math.random() * 30.0) - 15.0); // TODO is [-2.0, 2.0) good?
-				targetY = 61; // TODO is [0, 20.0) good?
-				targetZ = dolphin.posZ + ((Math.random() * 30.0) - 15.0); // TODO is [-2.0, 2.0) good?
-				this.dolphin.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, dolphin.swimSpeed);
-				found_path = !(this.dolphin.getNavigator().noPath());
-				// DEBUG
-				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ + ")" + "found_path:" + found_path);
-			}
-		}
-		
-		//are we at sea level?
-		double y = this.dolphin.posY;
-		System.out.println("dolphin.posY == " + y);
-		if(y==60)
-		{
-			System.out.println("stop executing");
-			return false;
+			System.out.println("stop executing Dive");
+			return false;	
 		}
 		else
 		{
-			System.out.println("continue executing");
+			System.out.println("continue executing Dive");
 			return true;
 		}
+
 	}
 	
 }
