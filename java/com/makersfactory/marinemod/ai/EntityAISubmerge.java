@@ -19,7 +19,7 @@ public class EntityAISubmerge extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
-			if (this.whale.isInWater() && Math.random() > 0.1D) { // debug. TODO remove
+			if (this.whale.posY > 61) { // debug. TODO remove
 				return true;
 			} else {
 				return false;
@@ -38,7 +38,7 @@ public class EntityAISubmerge extends EntityAIBase {
 			for (int try_cnt=1; try_cnt <= 5 && !found_path; ++try_cnt) {
 				targetX = whale.posX + ((Math.random() * 10.0) - 5.0); // TODO is [-5.0, 5.0) good?
 				targetY = whale.posY + ((Math.random() * 10.0) - 5.0); // TODO is [-5.0, 5.0) good?
-				targetZ = whale.posZ + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
+				targetZ = whale.posZ + ((Math.random() * 20.0) - 10.0); // TODO is [-20.0, 20.0) good?
 				this.whale.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, whale.swimSpeed);
 				found_path = ! (this.whale.getNavigator().noPath());
 				// DEBUG
