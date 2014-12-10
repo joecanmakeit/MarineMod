@@ -7,6 +7,7 @@ import com.makersfactory.marinemod.entity.EntityElephantSeal;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeManager;
 
@@ -25,6 +26,7 @@ public class EntityAISwim extends EntityAIBase {
 	private double lastBeachBiomeX;
 	private double lastBeachBiomeY;
 	private double lastBeachBiomeZ;
+	private Vec3 lastPos;
 	
 	public EntityAISwim(EntityElephantSeal entity) {
 		theEntity = entity;
@@ -52,6 +54,8 @@ public class EntityAISwim extends EntityAIBase {
 		// DEBUG
 		System.out.println("EntityAISwim startExecute()");
 		
+		theEntity.getNavigator().clearPathEntity();
+		
 		if (!this.theEntity.getBiome().equals(BiomeGenBase.beach)) {
 			System.out.println("EntityAISwim: entity is not in the beach biome");
 			System.out.println("Current Biome: " + this.theEntity.getBiome());
@@ -61,8 +65,7 @@ public class EntityAISwim extends EntityAIBase {
 				targetX = theEntity.nearByBeachX + ((theEntity.posX - theEntity.nearByBeachX) * .2) + ((Math.random() * 10.0) - 5.0);
 				targetY = theEntity.nearByBeachY + ((theEntity.posY - theEntity.nearByBeachY) * .2) + ((Math.random() * 10.0) - 5.0);
 				targetZ = theEntity.nearByBeachZ + ((theEntity.posZ - theEntity.nearByBeachZ) * .2)+ ((Math.random() * 10.0) - 5.0);
-				this.theEntity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, theEntity.swimSpeed);
-				found_path = ! (this.theEntity.getNavigator().noPath());
+				found_path = this.theEntity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, theEntity.swimSpeed);
 				// DEBUG
 				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ +")?? try" + try_cnt + ": " + !found_path);
 			}
@@ -71,21 +74,33 @@ public class EntityAISwim extends EntityAIBase {
 				targetX = theEntity.posX + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
 				targetY = theEntity.posY + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
 				targetZ = theEntity.posZ + ((Math.random() * 40.0) - 20.0); // TODO is [-20.0, 20.0) good?
-				this.theEntity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, theEntity.swimSpeed);
-				found_path = ! (this.theEntity.getNavigator().noPath());
+				found_path = this.theEntity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, theEntity.swimSpeed);
 				// DEBUG
 				System.out.println("EntityAISwim startExecute(): noPath (" + targetX + "," + targetY + "," + targetZ +")?? try" + try_cnt + ": " + !found_path);
 			}
 		}
+		lastPos = null;
 	}
 
 	@Override
 	public boolean continueExecuting() {
 		boolean continueExecuting = !this.theEntity.getNavigator().noPath();
-		// TODO maybe add some code that will chek if you actually made progress?
-		// DEBUG
-		System.out.println("EntityAISwim continueExecuting ="
-				+ continueExecuting);
+		
+		if (continueExecuting) {
+			Vec3 entity_current_pos = this.theEntity.getPosition(1.0F);
+			if (lastPos != null) {
+				if (entity_current_pos.distanceTo(lastPos) < 0.1) {
+					System.out.println("stuck " + entity_current_pos + " " + lastPos);
+					continueExecuting = false;
+				}
+			}
+			lastPos = entity_current_pos;
+		}
+ 
+		if (!continueExecuting) {
+			this.theEntity.getNavigator().clearPathEntity();
+		}
+		
 		return (continueExecuting);
 	}
 }

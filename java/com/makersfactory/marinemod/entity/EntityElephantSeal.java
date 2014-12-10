@@ -17,6 +17,8 @@ import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathPoint;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -77,7 +79,8 @@ public class EntityElephantSeal extends EntityWaterMob
 	{
 		super(p_i1695_1_);
 		System.out.println("EntityElephantSeal: Ctor");
-		this.setSize(1.0F, 2.5F, 3.0F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
+		//this.setSize(1.0F,1.0F);
+		this.setSize(1.6F, 0.75F, 0.85F); // todo adjust these numbers by looking at F3 + B (shows bounding box) - Desmond can't do this easily :/
 		//this.getBoundingBox().offset(p_72317_1_, p_72317_3_, p_72317_5_)
 		this.scientificName = "Mirounga Angustrirostris";
 		this.isImmuneToFire = true;
@@ -103,7 +106,7 @@ public class EntityElephantSeal extends EntityWaterMob
 		//boolean tmpwaterbool4=this.worldObj.getBlock((int)this.posX-1,(int)this.posY,(int)this.posZ) == Blocks.water;
 		//System.out.println("water checks: " + tmpwaterbool1 +" " + tmpwaterbool2 + " " + tmpwaterbool3 + " " + tmpwaterbool4);
 	}
-
+	
 	// TODO confirm this is correct: (entity is on sand and there is air directly above) or (entity is in air and their is sand directly below)?
 	/** does not check if biome is beach... **/
 	public boolean isPosTopBeachSand (int xCord, int yCord, int zCord) {
@@ -154,9 +157,25 @@ public class EntityElephantSeal extends EntityWaterMob
 		return coords;
 	}
 	
+	/** todo fix so the bbox is set around the entity **/
 	protected void setSize(float new_x, float new_y, float new_z) {
         super.setSize(new_x, new_y);
+        System.out.println(this.boundingBox.minX + " " + this.boundingBox.maxX + " | " + this.boundingBox.minY + " " + this.boundingBox.maxY + " | " + this.boundingBox.minZ + " " + this.boundingBox.maxZ);
+        /*this.boundingBox.minX = this.boundingBox.minX - (double)new_x- (double)new_x;
+        this.boundingBox.maxX = this.boundingBox.maxX - (double)new_x- (double)new_x;
         this.boundingBox.maxZ = this.boundingBox.minZ + (double)new_z;
+        System.out.println(this.boundingBox.minX + " " + this.boundingBox.maxX + " | " + this.boundingBox.minY + " " + this.boundingBox.maxY + " | " + this.boundingBox.minZ + " " + this.boundingBox.maxZ);
+        this.boundingBox.offset(-(double)new_x, 0, 0);
+        System.out.println(this.boundingBox.minX + " " + this.boundingBox.maxX + " | " + this.boundingBox.minY + " " + this.boundingBox.maxY + " | " + this.boundingBox.minZ + " " + this.boundingBox.maxZ);
+        AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(this.boundingBox.minX - (double)new_x- (double)new_x, this.boundingBox.maxX - (double)new_x,
+        		this.boundingBox.minY, this.boundingBox.maxY,
+        		this.posZ - new_z, this.posZ + new_z);
+        this.boundingBox.setBB(bb);
+        System.out.println(this.boundingBox.minX + " " + this.boundingBox.maxX + " | " + this.boundingBox.minY + " " + this.boundingBox.maxY + " | " + this.boundingBox.minZ + " " + this.boundingBox.maxZ);*/
+        //this.boundingBox.setBounds(this.boundingBox.minX - (double)new_x, this.boundingBox.minY, this.posZ - new_z, this.boundingBox.maxX - (double)new_x, this.boundingBox.maxY,  this.posZ + new_z);
+       // this.boundingBox.setBounds(this.posX - 10, this.posY - 10, this.posZ - 10, this.posX + 10, this.posY + 10, this.posZ + 10);
+        System.out.println(this.boundingBox.minX + " " + this.boundingBox.maxX + " | " + this.boundingBox.minY + " " + this.boundingBox.maxY + " | " + this.boundingBox.minZ + " " + this.boundingBox.maxZ);
+        
         // TODO should I adjust "this.myEntitySize" ?
         // TODO should I create a length field?
 	}
@@ -169,6 +188,26 @@ public class EntityElephantSeal extends EntityWaterMob
 	protected void entityInit(){
 		super.entityInit();
 		//printPos("entityInit: ");
+	}
+	
+	/** Change the entities path so that it changes its current target to be one block above where it currently is **/
+	public void modifyPathForBeach(int up) {
+		if (this.getNavigator().getPath() != null && !this.getNavigator().getPath().isFinished()) { // just to be safe
+			int totalNumberOfPoints = this.getNavigator().getPath().getCurrentPathLength();
+			int currentPoint = this.getNavigator().getPath().getCurrentPathIndex();
+			int pointsLeft = totalNumberOfPoints - currentPoint;
+					
+			PathPoint[] newPathPoints = new PathPoint[pointsLeft + 1]; // + 1 because we are going to add a point above us
+			newPathPoints[0] = new PathPoint((int) Math.floor(this.posX), (int) Math.floor(this.posY) + up, (int) Math.floor(this.posZ));
+			for (int i=0; i < pointsLeft; ++i) {
+				 PathPoint tmp_pp = this.getNavigator().getPath().getPathPointFromIndex(currentPoint + i);
+				 newPathPoints[1+i] = new PathPoint(tmp_pp.xCoord, tmp_pp.yCoord, tmp_pp.zCoord);
+			}
+			this.getNavigator().clearPathEntity();
+			this.getNavigator().setPath(new PathEntity(newPathPoints), this.swimSpeed);
+		} else {
+			System.err.println("elephant seal: modifyPathForBeach: should not get here: path is invalid"); // TODO remove debug
+		}
 	}
 	
     /**
@@ -228,9 +267,9 @@ public class EntityElephantSeal extends EntityWaterMob
        tasks.addTask(10, new EntityAILookIdle(this));
        targetTasks.addTask(0, new EntityAIHurtByTargetHerdAnimal(this, true)); */
        
-       tasks.addTask(1, aiMySwim);
+       //tasks.addTask(1, aiHeadToBeach);
        // tasks.addTask(1, aiWander);
-      // tasks.addTask(8, aiHeadToBeach);
+       tasks.addTask(8, aiMySwim);
     }
 
     protected void clearAITasks()
@@ -309,7 +348,7 @@ public class EntityElephantSeal extends EntityWaterMob
 			}
 			return false;
 		} else {
-			System.out.println("EntityElephantSeal: Found a beach");
+			System.out.println("EntityElephantSeal: Found a beach (" + tmp_coords[0] + "," + tmp_coords[1] + "," + tmp_coords[2] + ")");
 			this.nearByBeachX = tmp_coords[0];
 			this.nearByBeachY = tmp_coords[1];
 			this.nearByBeachZ = tmp_coords[2];
