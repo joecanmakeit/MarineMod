@@ -53,14 +53,15 @@ public class EntityAIDive extends EntityAIBase {
 		//after five seconds of diving, stop executing.
 		//this is called every tick and there are 20 ticks/second. 100 ticks == 5 seconds
 		++timer;
-		if(timer == 100)
+		if(timer >= 100)
 		{
+			timer=0;
 			System.out.println("stop executing Dive");
 			return false;	
 		}
 		else
 		{
-			System.out.println("continue executing Dive");
+			System.out.println("continue executing Dive timer==" + timer);
 			return true;
 		}
 
