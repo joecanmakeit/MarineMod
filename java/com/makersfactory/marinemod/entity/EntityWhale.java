@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.makersfactory.marinemod.ai.EntityAIDive;
 import com.makersfactory.marinemod.ai.EntityAISubmerge;
+import com.makersfactory.marinemod.ai.EntityAISurfaceForAir;
 import com.makersfactory.marinemod.ai.EntityAISwim;
 
 import net.minecraft.block.material.Material;
@@ -46,14 +47,17 @@ public class EntityWhale extends EntityWaterMob {
 		super(par1World);
 		this.isImmuneToFire = true;
 		this.setSize(4.0F,4.0F);
-		this.swimSpeed = 0.5D;
+		this.swimSpeed = 3.0D;
 		this.tasks.addTask(0, new EntityAISubmerge(this));
-		
+		this.tasks.addTask(1, new EntityAISurfaceForAir(this));
+
 	}
     
     public void onUpdate()
     {
         super.onUpdate();
+
+        
     }
     
     public boolean isAIEnabled()
