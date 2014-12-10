@@ -25,14 +25,13 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class MainForgeEvents {
-	
 	/** They are about to spawn the entity.
 	 * Check to see if the position is valid first and use this as a place to do anything else you need to before entity is spawned...
 	 * http://www.minecraftforge.net/wiki/Event_Reference#LivingSpawnEvent
 	 * http://www.minecraftforge.net/forum/index.php?topic=20376.0
 	 * @author Desmond **/
 	@SubscribeEvent
-	public void controlSpawn(EntityJoinWorldEvent event) {
+	public void worldJoinCallback(EntityJoinWorldEvent event) {
 		if (!event.entity.worldObj.isRemote) {
 			if (event.entity instanceof EntityElephantSeal) {
 				EntityElephantSeal tmp_entitiy = (EntityElephantSeal)event.entity;
@@ -42,6 +41,12 @@ public class MainForgeEvents {
 					if (! tmp_entitiy.findAndSetNearbyBeach()) { // try to find a nearby spot in the sand
 						System.out.println("Couldn't find nearby sand.");
 						event.setCanceled(true); // cancel the spawn
+					} else {
+						if(!tmp_entitiy.setPathToOcean()) { // TODO remove debug: I am just testing that my custom pathEntity works
+							System.out.println("Couldn't find a path to the ocean");
+						} else {
+							System.out.println("Found a path to the ocean");
+						}
 					}
 				} else {
 					tmp_entitiy.printPos("Enetity Elephant Seal Spawn Regected: ");
