@@ -41,12 +41,6 @@ public class MainForgeEvents {
 					if (! tmp_entitiy.findAndSetNearbyBeach()) { // try to find a nearby spot in the sand
 						System.out.println("Couldn't find nearby sand.");
 						event.setCanceled(true); // cancel the spawn
-					} else {
-						if(!tmp_entitiy.setPathToOcean()) { // TODO remove debug: I am just testing that my custom pathEntity works
-							System.out.println("Couldn't find a path to the ocean");
-						} else {
-							System.out.println("Found a path to the ocean");
-						}
 					}
 				} else {
 					tmp_entitiy.printPos("Enetity Elephant Seal Spawn Regected: ");

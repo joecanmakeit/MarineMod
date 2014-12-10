@@ -76,248 +76,8 @@ public class EntityElephantSeal extends EntityWaterMob
 	/** Z coordinate of the sand part of a nearby beach the seal will occasionally go to **/
 	public double nearByBeachZ;
 	public double swimSpeed;
-	private SealNavigator customSealNavigator;
 	
 	static int counttt = 0;	/// spawned count. used for debugging only
-	
-	protected class SealNavigator {
-		private ArrayList<Vec3> path;
-		private int curr_ptr; 
-		private boolean path_is_set;
-		private EntityElephantSeal entity;
-		private double path_speed;
-		private int total_ticks;
-		private int last_coords_index;
-		private int last_coords_hash;
-		private Vec3 last_pos;
-		private static final int STUCK_TICK_CHECK_INTERVAL = 20;
-		
-		public SealNavigator(EntityElephantSeal entityElephantSeal, double speed) {
-			entity = entityElephantSeal;
-			path = new ArrayList<Vec3>();
-			path_is_set = false;
-			curr_ptr = -1;
-			path_speed = speed;
-			last_pos = null;
-		}
-		
-		/** start coords should be entities current position. It is not put into the path. The end coords are put into the path **/
-		public void setPath(double start_x, double start_y, double start_z, double target_x, double target_y, double target_z) {
-			Vec3 start_coords = Vec3.createVectorHelper(start_x, start_y, start_z);
-			Vec3 end_coords = Vec3.createVectorHelper(target_x, target_y, target_z);
-			
-			this.setPath(start_coords, end_coords);
-		}
-		
-		/** returns the sum of vectors v1 and v2. Does not modify v1 or v2 **/
-		public Vec3 add(Vec3 v1, Vec3 v2) {
-			return v1.addVector(v2.xCoord, v2.yCoord, v2.zCoord);
-		}
-		
-		/** scale v by the scalar. returns a new Vec3 (doesn't modify v) **/
-		public Vec3 scale(Vec3 v, double scalar) {
-			return Vec3.createVectorHelper(v.xCoord * scalar, v.yCoord * scalar, v.zCoord * scalar);
-		}
-		
-		/** start coords should be entities current position. It is not put into the path. The end coords are put into the path **/
-		public void setPath(Vec3 start_coords, Vec3 end_coords) {
-			System.out.println("in setPath");
-			
-			// reset the path
-			this.path_is_set = false;
-			this.path.clear();
-			this.curr_ptr = -1;
-			this.last_pos = null;
-			
-			// add in the path. try to set a point about every 1 block away but if the distance is far we will use 100 points maximum
-			double distance = start_coords.distanceTo(end_coords);
-			double step_size = (distance/100.0 > 2.0)? (distance/100.0) : 2.0; // if using 2.0 as step size would give less than 100 steps use 2.0 otherwise use whatever gives 100 steps
-			Vec3 dir = start_coords.subtract(end_coords).normalize(); // Normalize(End - Start)
-			Vec3 curr_coords = add(start_coords, scale(dir, step_size*1)); // curr_point = start_point + ( normalize(end_point-start_point) * (step_size * 1,2,3....))
-			for (int scalar=1; curr_coords.distanceTo(end_coords) > step_size; ++scalar) {
-				curr_coords = add(start_coords, scale(dir, step_size*scalar)); // curr_point = start_point + ( normalize(end_point-start_point) * (step_size * 1,2,3....))
-				// offset the point randomly a little bit 
-				curr_coords = curr_coords.addVector(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5);
-				// if block is free
-				Block block_at_curr_point = entity.worldObj.getBlock((int)Math.round(curr_coords.xCoord), (int)Math.round(curr_coords.yCoord), (int)Math.round(curr_coords.zCoord));
-				if (block_at_curr_point.equals(Blocks.air) || block_at_curr_point.equals(Blocks.water)) {
-					System.out.println("Adding path point : " + block_at_curr_point + " at point [" + (int)Math.round(curr_coords.xCoord) + "  " + (int)Math.round(curr_coords.yCoord) + "  " + (int)Math.round(curr_coords.zCoord)); 
-					path.add(curr_coords);
-				} else {
-					boolean found_clear_point = false;
-					int bad_x = (int)Math.round(curr_coords.xCoord);
-					int bad_y = (int)Math.round(curr_coords.yCoord);
-					int bad_z = (int)Math.round(curr_coords.zCoord);
-					
-					// todo try searching from 0 out...
-					for (int x = -4; x <= 4 && !found_clear_point; ++x) {
-						for (int y = -4; y <= 4 && !found_clear_point; ++y) {
-							for (int z = -4; z <= 4 && !found_clear_point; ++z) {
-								Block tmp = entity.worldObj.getBlock(bad_x + x, bad_y + y, bad_z + z);
-								if (tmp.equals(Blocks.air) || tmp.equals(Blocks.water)) {
-									found_clear_point = true;
-									System.out.println("Adding path point : " + block_at_curr_point + " at point [" + (double)(bad_x + x) + "  " + (double)(bad_y + y) + "  " + (double)(bad_z + z));
-									path.add(Vec3.createVectorHelper((double)(bad_x + x), (double)(bad_y + y), (double)(bad_z + z)));
-								}
-							}
-						}
-					}
-					
-					if (!found_clear_point) {
-						System.out.println("Can not reach path: " + block_at_curr_point + " at point [" + (int)Math.round(curr_coords.xCoord) + "  " + (int)Math.round(curr_coords.yCoord) + "  " + (int)Math.round(curr_coords.zCoord));
-						path.add(curr_coords); // TODO remove and handle this appropriately (search backwards and try until stuck. then search with in a range between these two points.
-					}
-				}
-			}
-			
-			// add in last point
-			this.path.add(end_coords);
-			Block block_at_curr_point = entity.worldObj.getBlock((int)Math.round(end_coords.xCoord), (int)Math.round(end_coords.yCoord), (int)Math.round(end_coords.zCoord));
-			System.out.println("Adding path point : " + block_at_curr_point + " at point [" + end_coords);
-			
-			this.last_coords_index = -1; 
-			this.curr_ptr = 0;
-			this.path_is_set = true;
-			
-			System.out.println("out setPath");
-		}
-		
-		public boolean pathIsSet() {
-			return this.path_is_set;
-		}
-		
-		public int getPathIndex() {
-			if (pathIsSet()) return this.curr_ptr;
-			return -1;
-		}
-		
-		public int getPathLength() {
-			if (pathIsSet()) return this.path.size();
-			return 0;
-		}
-		
-		
-		public boolean moveEntity() {
-			//System.out.println("In moveEntity");
-			if (this.pathIsSet()) {
-				int currIdx = this.getPathIndex();
-				Vec3 currCoords = this.path.get(this.getPathIndex());
-				if (last_coords_index != currIdx || last_coords_hash != currCoords.hashCode() || this.entity.getNavigator().noPath()) {
-					last_coords_index = currIdx;
-					last_coords_hash = currCoords.hashCode();
-					
-                    //this.entity.getMoveHelper().setMoveTo(currCoords.xCoord, currCoords.yCoord, currCoords.zCoord, this.path_speed);
-					if (this.entity.getNavigator().tryMoveToXYZ(currCoords.xCoord, currCoords.yCoord, currCoords.zCoord, this.path_speed)) {
-						//System.out.println("getting path succeeded");
-					} else {
-						System.out.println("getting path failed try to move to: " + currCoords);
-					}
-					//System.out.println("out moveEntity");
-                    return true;
-				}
-            }
-			//System.out.println("out moveEntity");
-            return false;
-		}
-		
-	    private void updatePathState() {
-	    	//System.out.println("In update custom path state");
-	    	if (this.pathIsSet()) {
-		        Vec3 vec3 = this.entity.getPosition(1.0F);
-		        int i = this.getPathIndex();
-	
-		        if (i == this.getPathLength()-1) {
-		        	if (this.total_ticks % STUCK_TICK_CHECK_INTERVAL == 0 && last_pos != null && vec3.distanceTo(last_pos) < 0.1) {
-		        		System.out.println("Entity: " + vec3);
-		        		System.out.println("Last  : " + last_pos);
-		        		System.out.println("Dest  : " + this.path.get(i));
-		        		System.out.println("Ticks : " + total_ticks);
-	        			System.out.println("Stuck but at the last point on the path: Finished Path");
-	        			this.path_is_set = false;
-						this.path.clear();
-						this.curr_ptr = -1;
-						this.last_pos = null;
-	        		}
-		        } else {
-	        		double distance_from_entity_to_next_point = this.path.get(i).distanceTo(vec3);
-	        		Vec3 nextNextPoint = this.path.get(i+1);
-	        		//System.out.println("Checking If Path Pointer Should Update");
-	        		
-		        	if (distance_from_entity_to_next_point < 0.1 || ( (this.total_ticks % (STUCK_TICK_CHECK_INTERVAL*2) == 0) && (distance_from_entity_to_next_point < 0.4) && this.isWaterAndAir(this.path.get(i), this.path.get(i+1)))) {
-		        		// TODO should say if very close to next point or (we haven't checked in a little while and if close to next point and there is a fairly clear path to the next next point). Note due to the way the navigator is written it won't ever get this close:/ I think it can only get to within the sqrt of the width of the entity but we check if stuck as another means of advancing in the path 
-		        		this.curr_ptr++;
-		        		System.out.println("Path Pointer Was Incrimented");
-		        	} else if (this.total_ticks % STUCK_TICK_CHECK_INTERVAL == 0) {
-		        		System.out.println("Entity: " + vec3);
-		        		System.out.println("Last  : " + last_pos);
-		        		System.out.println("Dest  : " + this.path.get(i));
-		        		System.out.println("Dist  : " + distance_from_entity_to_next_point);
-		        		System.out.println("Ticks : " + total_ticks);
-		        		
-		        		if (last_pos != null && vec3.distanceTo(last_pos) < 0.1) {
-		        			System.out.println("Stuck so forcefully advancing path");
-		        			this.curr_ptr++;
-		        		}
-		        	}
-	        	}
-		        last_pos = Vec3.createVectorHelper(vec3.xCoord, vec3.yCoord, vec3.zCoord);
-	        	this.total_ticks++;
-	        	//System.out.println("Done Checking If Path Pointer Should Update");
-	    	}
-	    }
-	    
-	    private boolean vec3_equals(Vec3 a, Vec3 b) {
-	    	if (a == null || b == null) return false;
-			return ( a.xCoord == b.xCoord && 
-					 a.yCoord == b.yCoord &&
-					 a.zCoord == b.zCoord);
-		}
-
-		private boolean isWaterAndAir(Vec3 start, Vec3 end) {
-	    	System.out.println("in isWaterAndAir");
-	    	
-	    	Vec3 dir = start.subtract(end).normalize();
-	    	Vec3 curr;
-	    	int count = 0;
-	    	final double dist = start.distanceTo(end);
-	    	
-	    	for (double scalar=0; scalar <= dist; scalar++) {
-	    		curr = add(start, scale(dir, scalar));
-	    		Block curr_block = entity.worldObj.getBlock((int)Math.ceil(curr.xCoord), (int)Math.ceil(curr.yCoord), (int)Math.ceil(curr.zCoord));
-	    		if (curr_block != Blocks.water || curr_block != Blocks.air) {
-	    			System.out.println("out isWaterAndAir");
-	    			return false;
-	    		}
-	    		
-	    		curr_block = entity.worldObj.getBlock((int)Math.floor(curr.xCoord), (int)Math.floor(curr.yCoord), (int)Math.floor(curr.zCoord));
-	    		if (curr_block != Blocks.water || curr_block != Blocks.air) {
-	    			System.out.println("out isWaterAndAir");
-	    			return false;
-	    		}
-	    	}
-	    	System.out.println("out isWaterAndAir");
-	    	return true;
-	    }
-	}
-	
-	public boolean setPathToOcean() {
-		Vec3 curr_pos = this.getPosition(1.0F);
-		Vec3 out = Vec3.createVectorHelper(7.0, 0.0, 7.0);
-		float angle_tic = (float)((2 * Math.PI) / 100.0);
-		for (int angle = 1; angle < 100; ++angle) {
-			out.rotateAroundY(angle_tic);
-			Vec3 tmp = curr_pos.addVector(out.xCoord, out.yCoord, out.zCoord);
-			if (this.worldObj.getBlock((int)tmp.xCoord, (int)tmp.yCoord, (int)tmp.zCoord) == Blocks.water) {
-				this.customSealNavigator.setPath(curr_pos, tmp);
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public SealNavigator getSealNavigator() {
-		return this.customSealNavigator;
-	}
 	
 	public EntityElephantSeal(World p_i1695_1_)
 	{
@@ -333,7 +93,6 @@ public class EntityElephantSeal extends EntityWaterMob
 		this.spawnX = this.posX;
 		this.spawnY = this.posY;
 		this.spawnZ = this.posZ;
-		this.customSealNavigator = new SealNavigator(this, this.swimSpeed);
 		// find the sand close to the spawn point of the seal.
 		boolean not_found = true;
 		int ttt1 = 0;
@@ -476,7 +235,7 @@ public class EntityElephantSeal extends EntityWaterMob
        clearAITasks(); // clear any tasks assigned in super classes
        //good to have instances of AI so task list can be modified, including in subclasses
        //aiWander = new EntityAIWander(this, 1.0D);
-      //aiHeadToBeach = new EntityAIHeadToBeach(this);
+       aiHeadToBeach = new EntityAIHeadToBeach(this);
        //aiMySwim = new EntityAISwim(this);
       
        /*protected EntityAIBase aiSwimming = new EntityAISwimming(this);
@@ -518,7 +277,7 @@ public class EntityElephantSeal extends EntityWaterMob
        tasks.addTask(10, new EntityAILookIdle(this));
        targetTasks.addTask(0, new EntityAIHurtByTargetHerdAnimal(this, true)); */
 
-       //tasks.addTask(1, aiHeadToBeach);
+       tasks.addTask(1, aiHeadToBeach);
        // tasks.addTask(1, aiWander);
       // tasks.addTask(8, aiHeadToBeach);
     }
@@ -564,22 +323,11 @@ public class EntityElephantSeal extends EntityWaterMob
 	 */
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-        this.customSealNavigator.updatePathState();
 	}
 
     protected void updateEntityActionState() {
         ++this.entityAge;
         this.despawnEntity();
-    }
-    
-    public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_)
-    {
-    	if (this.customSealNavigator.pathIsSet()) {
-    		this.customSealNavigator.moveEntity();
-    		//super.moveEntityWithHeading(p_70612_1_, p_70612_2_);
-    	} else {
-    		super.moveEntityWithHeading(p_70612_1_, p_70612_2_);
-    	}
     }
 
 	/**
