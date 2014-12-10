@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 public class EntityDolphin extends EntityWaterMob {
 	
 	public double swimSpeed;
+	public boolean dive;
 
 	public EntityDolphin(World p_i1695_1_) {
 		super(p_i1695_1_);
@@ -18,7 +19,7 @@ public class EntityDolphin extends EntityWaterMob {
 		this.swimSpeed = 1.0D;
 		
 		this.tasks.addTask(0, new EntityAIDive(this));
-		this.tasks.addTask(1, new EntityAISurface(this));
+//		this.tasks.addTask(1, new EntityAISurface(this));
 //		this.tasks.addTask(0, new EntityAISwimming(this));
 //		this.tasks.addTask(1, new EntityAIPanic(this, 1.4D));
 //		this.tasks.addTask(2,  new EntityAITempt(this, 1.0D, Items.fish, false));
@@ -31,6 +32,10 @@ public class EntityDolphin extends EntityWaterMob {
     public void onUpdate()
     {
         super.onUpdate();
+        if(this.posY <= 30)
+        	this.dive = false;
+        else
+        	this.dive = true;
     }
     
     public boolean isAIEnabled()
@@ -40,7 +45,7 @@ public class EntityDolphin extends EntityWaterMob {
     
     public boolean canBePushed()
     {
-    	return false;
+    	return true;
     }
     
     
