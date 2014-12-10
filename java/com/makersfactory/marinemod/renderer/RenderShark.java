@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderShark extends RenderLiving {
 
-	private static final ResourceLocation sharkTextures = new ResourceLocation("textures/entity/pig/pig.png");
+	private static final ResourceLocation sharkTextures = new ResourceLocation("myassets:textures/entity/shark.png");
 	
 	public RenderShark(ModelBase p_i1262_1_, float p_i1262_2_) {
 		super(p_i1262_1_, p_i1262_2_);
