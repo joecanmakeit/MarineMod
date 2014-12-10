@@ -225,8 +225,8 @@ public class EntityElephantSeal extends EntityWaterMob
        clearAITasks(); // clear any tasks assigned in super classes
        //good to have instances of AI so task list can be modified, including in subclasses
        //aiWander = new EntityAIWander(this, 1.0D);
-       aiHeadToBeach = new EntityAIHeadToBeach(this);
-       //aiMySwim = new EntityAISwim(this);
+       //aiHeadToBeach = new EntityAIHeadToBeach(this);
+       aiMySwim = new EntityAISwim(this);
       
        /*protected EntityAIBase aiSwimming = new EntityAISwimming(this);
        protected EntityAIBase aiLeapAtTarget = new EntityAILeapAtTarget(this, 0.4F);
@@ -267,9 +267,9 @@ public class EntityElephantSeal extends EntityWaterMob
        tasks.addTask(10, new EntityAILookIdle(this));
        targetTasks.addTask(0, new EntityAIHurtByTargetHerdAnimal(this, true)); */
        
-       tasks.addTask(1, aiHeadToBeach);
+       //tasks.addTask(1, aiHeadToBeach);
        // tasks.addTask(1, aiWander);
-      // tasks.addTask(8, aiHeadToBeach);
+       tasks.addTask(8, aiMySwim);
     }
 
     protected void clearAITasks()

@@ -48,7 +48,6 @@ public class MarineMod {
 	public static int testDimensionId = 5;
 	
 	// NEW FIELDS GO HERE
-	public static Item myItem = new Item();
 	public static ItemTeleporter teleporterTest = new ItemTeleporter("teleporterTest", testDimensionId);
 	public static ItemTeleporter teleporterHome = new ItemTeleporter("teleporterHome", 0);
 	
@@ -73,11 +72,6 @@ public class MarineMod {
 	public void load(FMLInitializationEvent event) {
 		proxy.registerRenderers();
 		GameRegistry.registerWorldGenerator(new MainGenerator(), 1000);	
-		
-		myItem.setCreativeTab(CreativeTabs.tabMisc);
-		myItem.setTextureName("myassets:textures/items/myItem.png");
-		myItem.setUnlocalizedName("myItem");
-		GameRegistry.registerItem(myItem, "myItem");
 		
 		GameRegistry.registerItem(teleporterTest, "teleporterTest");
 		GameRegistry.registerItem(teleporterHome, "teleporterHome");
