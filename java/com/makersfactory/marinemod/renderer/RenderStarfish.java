@@ -19,4 +19,5 @@ public class RenderStarfish extends RenderLiving {
 		return starfishTextures;
 	}
 
+
 }

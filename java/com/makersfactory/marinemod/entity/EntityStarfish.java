@@ -22,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.AchievementList;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class EntityStarfish extends EntityAnimal
@@ -37,6 +38,15 @@ public class EntityStarfish extends EntityAnimal
         //this.tasks.addTask(3, new EntityAIMate(this, 1.0D));
         this.tasks.addTask(2, new EntityAIFollowParent(this, 1.1D));
     }
+    
+    @Override
+	public void setPosition(double par1, double par2, double par3) {
+		AxisAlignedBB b = this.boundingBox;
+		double boxSX = b.maxX - b.minX;
+		double boxSY = b.maxY - b.minY;
+		double boxSZ = b.maxZ - b.minZ;
+		this.boundingBox.setBounds(posX - boxSX/2D, posY, posZ - boxSZ/2D, posX + boxSX/2D, posY + boxSY, posZ + boxSZ/2D);
+	}
 
     /**
      * Returns true if the newer Entity AI code should be run
@@ -141,37 +151,5 @@ public class EntityStarfish extends EntityAnimal
     {
     	
         return this.isInWater() && p_70877_1_.getItem() == Items.cookie;
-    }
-    
-    /**
-     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
-     */
-//    public boolean interact(EntityPlayer p_70085_1_)
-//    {
-//        if (super.interact(p_70085_1_))
-//        {
-//            return true;
-//        }
-//        else if (this.getSaddled() && !this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == p_70085_1_))
-//        {
-//            p_70085_1_.mountEntity(this);
-//            return true;
-//        }
-//        else
-//        {
-//            return false;
-//        }
-//    }
-    
-    /**
-     * Called when the mob is falling. Calculates and applies fall damage.
-     */
-//    protected void fall(float p_70069_1_) {
-//        super.fall(p_70069_1_);
-//
-//        if (p_70069_1_ > 5.0F && this.riddenByEntity instanceof EntityPlayer)
-//        {
-//            ((EntityPlayer)this.riddenByEntity).triggerAchievement(AchievementList.flyPig);
-//        }
-//    }
+    }   
 }
