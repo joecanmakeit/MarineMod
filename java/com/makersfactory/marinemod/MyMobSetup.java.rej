@@ -1,0 +1,9 @@
+diff a/java/com/makersfactory/marinemod/MyMobSetup.java b/java/com/makersfactory/marinemod/MyMobSetup.java	(rejected hunks)
+@@ -43,6 +43,7 @@
+ 		registerNewSpawnBiome(EntityStarfish.class, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.beach);
+ 		
+ 		//Fish Entity
++		registerNewEntity(mod, EntityFish.class, "Fish", 0xE7E6DD, 0xF4B400);
+ 		registerNewSpawnBiome(EntityFish.class, 6, 1, 5, EnumCreatureType.creature, BiomeGenBase.beach);
+ 		// Dolphin Entity
+ 		registerNewEntity(mod, EntityDolphin.class, "Dolphin", 0xE7E6DD, 0xF4B400);
